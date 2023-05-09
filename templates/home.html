@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đề tài</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+<script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    
+    <style>
+      #div_trai {
+        /* height: 700px; */
+      }
+
+      #div_phai {
+        height: 700px;
+        background-color: skyblue;
+      }
+
+      .nav-link {
+        font-weight: 600;
+      }
+
+      .navbar-nav .nav-link.active {
+        color: #0F62FE;
+      }
+
+      h1, h2 {
+        color: #0F62FE;
+        font-weight: 600;
+        margin-bottom: 15px;
+      }
+
+      #button_group > .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      
+      #button_group > .container > button {
+        width: 24%; /* chiếm 45% chiều rộng của container */
+        margin-bottom: 10px;
+      }
+      
+      @media screen and (max-width: 768px) {
+        #button_group > .container > button {
+          width: 100%; /* chiếm toàn bộ chiều rộng của container */
+        }
+        
+        #button_group > .container {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Nav bar -->
+    <div id="navbar">
+      <nav class="navbar navbar-expand-sm bg-body-tertiary shadow-sm p-3 mb-5 bg-body-tertiary rounded" style="height: 60px">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#"></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="navbar-collapse collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav mx-auto">
+              <a class="nav-link active" aria-current="page" href="#">Đề tài</a>
+              <a class="nav-link" href="#">Tạo câu hỏi</a>
+              <a class="nav-link" href="#">Khảo sát</a>
+              <a class="nav-link" href="#">Phân tích</a>
+            </div>
+            <button type="button" class="btn btn-primary">Đăng xuất</button>
+          </div>
+        </div>
+      </nav>    
+    </div>
+
+    
+    <!-- Content -->
+    <div id="content" class="container">
+      <div class="row">
+
+        <!-- Input đề tài -->
+        <div id="div_trai" class="col-lg-5">
+          <h1>Đề tài</h1>
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingInput" placeholder="Khảo sát sự hài lòng">
+            <label for="floatingInput">Tên đề tài</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingInput" placeholder="Nguyễn Văn A">
+            <label for="floatingInput">Người thực hiện</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="date" class="form-control" id="floatingInput" placeholder="10/31/2023">
+            <label for="floatingInput">Ngày thực hiện</label>
+          </div>
+          <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 200px"></textarea>
+            <label for="floatingTextarea">Mô tả</label>
+          </div>
+
+          <!-- Button group -->
+          <div id="button_group" class="mt-5 d-flex mb-5">
+            <div class="container ms-auto">
+              <button type="button" class="btn btn-primary">+Thêm</button>
+              <button type="button" class="btn btn-success">Lưu</button>
+              <button type="button" class="btn btn-secondary">Sửa</button>
+              <button type="button" class="btn btn-danger">Xóa</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hiện thị data grid -->
+        <div id="div_phai" class="col-lg-7">
+          <h2>Danh sách đề tài</h2>
+          <div id="table"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      new gridjs.Grid({
+        columns: [
+          { id: 'name', name: 'Name' },
+          { id: 'age', name: 'Age' },
+          { id: 'address', name: 'Address', sort: false },
+          { id: 'phone', name: 'Phone Number', sort: false },
+          { id: 'email', name: 'Email' },
+        ],
+        data: [
+          {% for user in users %}
+            {
+              name: '{{ user.name }}',
+              age: {{ user.age }},
+              address: '{{ user.address }}',
+              phone: '{{ user.phone }}',
+              email: '{{ user.email }}'
+            },
+          {% endfor %}
+        ],
+        search: {
+          selector: (cell, rowIndex, cellIndex) => [0, 1, 4].includes(cellIndex) ? cell : null,
+        },
+        sort: true,
+        pagination: true,
+      }).render(document.getElementById('table'));
+    </script>
+  </body>
+</html>
