@@ -3,10 +3,10 @@ from database import load_detai
 
 app = Flask(__name__)
 
-@app.route("/")
-def home_page():
+@app.route("/", methods=["GET", "POST"])
+def detai_page():
     detais = load_detai()
-    return render_template("home.html", detais=detais)
+    return render_template("detai.html", detais=detais)
 
 
 if __name__ == "__main__":
