@@ -11,52 +11,6 @@
     <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
     <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
     
-    <style>
-      #div_trai {
-        /* height: 700px; */
-      }
-
-      #div_phai {
-        height: 700px;
-        background-color: skyblue;
-      }
-
-      .nav-link {
-        font-weight: 600;
-      }
-
-      .navbar-nav .nav-link.active {
-        color: #0F62FE;
-      }
-
-      h1, h2 {
-        color: #0F62FE;
-        font-weight: 600;
-        margin-bottom: 15px;
-      }
-
-      #button_group > .container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-      }
-      
-      #button_group > .container > button {
-        width: 24%; /* chiếm 45% chiều rộng của container */
-        margin-bottom: 10px;
-      }
-      
-      @media screen and (max-width: 768px) {
-        #button_group > .container > button {
-          width: 100%; /* chiếm toàn bộ chiều rộng của container */
-        }
-        
-        #button_group > .container {
-          flex-direction: column;
-          align-items: center;
-        }
-      }
-    </style>
   </head>
   <body>
     <!-- Nav bar -->
@@ -77,10 +31,10 @@
             <button type="button" class="btn btn-primary">Đăng xuất</button>
           </div>
         </div>
-      </nav>    
+      </nav>
     </div>
 
-    
+
     <!-- Content -->
     <div id="content" class="container">
       <div class="row">
@@ -123,23 +77,67 @@
         </div>
       </div>
     </div>
-    <script>
+  </body>
+  <style>
+      #div_trai {
+        /* height: 700px; */
+      }
+
+      #div_phai {
+        height: 700px;
+<!--        background-color: skyblue;-->
+      }
+
+      .nav-link {
+        font-weight: 600;
+      }
+
+      .navbar-nav .nav-link.active {
+        color: #0F62FE;
+      }
+
+      h1, h2 {
+        color: #0F62FE;
+        font-weight: 600;
+        margin-bottom: 15px;
+      }
+
+      #button_group > .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      
+      #button_group > .container > button {
+        width: 24%; /* chiếm 45% chiều rộng của container */
+        margin-bottom: 10px;
+      }
+      
+      @media screen and (max-width: 768px) {
+        #button_group > .container > button {
+          width: 100%; /* chiếm toàn bộ chiều rộng của container */
+        }
+        
+        #button_group > .container {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+</html>
+<script>
       new gridjs.Grid({
         columns: [
-          { id: 'name', name: 'Name' },
-          { id: 'age', name: 'Age' },
-          { id: 'address', name: 'Address', sort: false },
-          { id: 'phone', name: 'Phone Number', sort: false },
-          { id: 'email', name: 'Email' },
+          { id: 'name', name: 'Tên đề tài' },
+          { id: 'person', name: 'Người thực hiện' },
+          { id: 'date', name: 'Ngày thực hiện'}
         ],
         data: [
-          {% for user in users %}
+          {% for detai in detais %}
             {
-              name: '{{ user.name }}',
-              age: {{ user.age }},
-              address: '{{ user.address }}',
-              phone: '{{ user.phone }}',
-              email: '{{ user.email }}'
+              name: '{{ detai.ten_de_tai }}',
+              person: '{{ detai.nguoi_thuc_hien | replace("'", "\\'") }}',
+              date: '{{ detai.ngay_thuc_hien }}'
             },
           {% endfor %}
         ],
@@ -150,5 +148,3 @@
         pagination: true,
       }).render(document.getElementById('table'));
     </script>
-  </body>
-</html>

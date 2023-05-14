@@ -1,10 +1,12 @@
 from flask import Flask, render_template
+from database import load_detai
 
 app = Flask(__name__)
 
 @app.route("/")
 def home_page():
-    return render_template("home.html")
+    detais = load_detai()
+    return render_template("home.html", detais=detais)
 
 
 if __name__ == "__main__":
