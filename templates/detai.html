@@ -10,6 +10,7 @@
 <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
     <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
     <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <style>
       #div_trai {
@@ -88,22 +89,22 @@
         <!-- Input đề tài -->
         <div id="div_trai" class="col-lg-5">
           <h1>Đề tài</h1>
-          <form method="POST">
+          <form method="POST" action="/insert_detai">
             <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="ten_de_tai" placeholder="Khảo sát sự hài lòng">
-              <label for="ten_de_tai">Tên đề tài</label>
+              <input type="text" class="form-control" id="ten_de_tai" name="ten_de_tai" placeholder="Khảo sát sự hài lòng">
+              <label>Tên đề tài</label>
             </div>
             <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="nguoi_thuc_hien" placeholder="Nguyễn Văn A">
-              <label for="nguoi_thuc_hien">Người thực hiện</label>
+              <input type="text" class="form-control" id="nguoi_thuc_hien" name="nguoi_thuc_hien" placeholder="Nguyễn Văn A">
+              <label>Người thực hiện</label>
             </div>
             <div class="form-floating mb-3">
-              <input type="date" class="form-control" id="ngay_thuc_hien" placeholder="10/31/2023">
-              <label for="ngay_thuc_hien">Ngày thực hiện</label>
+              <input type="date" class="form-control" id="ngay_thuc_hien" name="ngay_thuc_hien" placeholder="10/31/2023">
+              <label>Ngày thực hiện</label>
             </div>
           <div class="form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" id="mo_ta" style="height: 200px"></textarea>
-            <label for="mo_ta">Mô tả</label>
+            <textarea class="form-control" placeholder="Leave a comment here" id="mo_ta" name="mo_ta" style="height: 200px"></textarea>
+            <label>Mô tả</label>
           </div>
           </form>
 
@@ -111,7 +112,7 @@
           <div id="button_group" class="mt-5 d-flex mb-5">
             <div class="container ms-auto">
               <button type="button" class="btn btn-primary">+Thêm</button>
-              <button type="button" class="btn btn-success" onclick="luu_gia_tri()">Lưu</button>
+              <button type="button" class="btn btn-success" onclick="luu_de_tai()">Lưu</button>
               <button type="button" class="btn btn-secondary">Sửa</button>
               <button type="button" class="btn btn-danger">Xóa</button>
             </div>
@@ -126,18 +127,49 @@
       </div>
     </div>
     <script>
+      function luu_de_tai() {
+        let ten_de_tai = document.getElementById('ten_de_tai').value;
+        let nguoi_thuc_hien = document.getElementById('nguoi_thuc_hien').value;
+        let ngay_thuc_hien = document.getElementById('ngay_thuc_hien').value;
+        let mo_ta = document.getElementById('mo_ta').value;
+        let detai = {
+          'ten_de_tai': ten_de_tai,
+          'nguoi_thuc_hien': nguoi_thuc_hien,
+          'ngay_thuc_hien': ngay_thuc_hien,
+          'mo_ta': mo_ta
+        };
+        sendData(detai);
+      };
+
+      function sendData(detai) {
+        $.ajax({
+          url: '/insert_detai',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ 'detai': detai }),
+          success: function() {
+            console.log(detai);
+          },
+          error: function(error) {
+            console.log(error);
+          }
+        });
+      };
+
       new gridjs.Grid({
         columns: [
           { id: 'name', name: 'Tên đề tài' },
           { id: 'person', name: 'Người thực hiện' },
-          { id: 'date', name: 'Ngày thực hiện'}
+          { id: 'date', name: 'Ngày thực hiện'},
+          { id: 'description', name: 'Mô tả'}
         ],
         data: [
           {% for detai in detais %}
             {
               name: '{{ detai.ten_de_tai }}',
               person: '{{ detai.nguoi_thuc_hien | replace("'", "\\'") }}',
-              date: '{{ detai.ngay_thuc_hien }}'
+              date: '{{ detai.ngay_thuc_hien }}',
+              description: '{{ detai.mo_ta | replace("'", "\\'") }}'
             },
           {% endfor %}
         ],
@@ -150,4 +182,3 @@
     </script>
   </body>
 </html>
-\
