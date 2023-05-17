@@ -26,20 +26,38 @@ def insert_detai(detai):
               detai['nguoi_thuc_hien'],
               detai['ngay_thuc_hien'],
               detai['mo_ta'])
-    sql = "INSERT INTO detai(user_id, ten_de_tai, nguoi_thuc_hien, ngay_thuc_hien, mo_ta) VALUES (%s, %s, %s, %s, %s)"
-    mycursor.execute(sql, values)
-    print("Insert")
+    if detai['detai_id'] == 0:
+        sql = "INSERT INTO detai(user_id, ten_de_tai, nguoi_thuc_hien, ngay_thuc_hien, mo_ta) VALUES (%s, %s, %s, %s, %s)"
+        mycursor.execute(sql, values)
+        print("Insert")
+    else:
+        sql = """UPDATE detai SET 
+                    user_id = %s,
+                    ten_de_tai = %s,
+                    nguoi_thuc_hien = %s,
+                    ngay_thuc_hien = %s,
+                    mo_ta = %s
+                WHERE detai_id = %s
+                """
+        values = (1, detai['ten_de_tai'],
+              detai['nguoi_thuc_hien'],
+              detai['ngay_thuc_hien'],
+              detai['mo_ta'],
+            detai['detai_id'])
+        mycursor.execute(sql, values)
+        print("Update")
+
 
 def delete_detai(detai):
-    values = (1, detai['ten_de_tai'],
-              detai['nguoi_thuc_hien'],
-              detai['mo_ta'])
+    values = (1, detai['detai_id'])
     sql = """
             DELETE FROM detai
             WHERE user_id = %s AND
-                  ten_de_tai = %s AND
-                  nguoi_thuc_hien = %s AND
-                  mo_ta = %s;
+                  detai_id = %s;
         """
     mycursor.execute(sql, values)
     print("Delete")
+
+mydb.commit()
+
+# Đóng kết nối

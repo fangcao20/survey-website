@@ -2,6 +2,7 @@ const data = [];
 
 for (const detai of detais) {
   data.push({
+    'ID': detai.detai_id,
     'Tên đề tài': detai.ten_de_tai,
     'Người thực hiện': detai.nguoi_thuc_hien ? detai.nguoi_thuc_hien.replace("'", "\\'") : '',
     'Ngày thực hiện': detai.ngay_thuc_hien,
@@ -10,6 +11,7 @@ for (const detai of detais) {
 }
 
 const columns = [
+  { field: 'ID', hide: true},
   { field: 'Tên đề tài' },
   { field: 'Người thực hiện' },
   { field: 'Ngày thực hiện' },
@@ -39,6 +41,7 @@ function onSelectionChanged() {
     if (selectedRows.length > 0) {
         console.log(selectedRows);
         let detai = {
+          'detai_id': selectedRows[0]['ID'],
           'ten_de_tai': selectedRows[0]['Tên đề tài'],
           'nguoi_thuc_hien': selectedRows[0]['Người thực hiện'],
           'ngay_thuc_hien': selectedRows[0]['Ngày thực hiện'],
@@ -46,6 +49,7 @@ function onSelectionChanged() {
         };
         return detai;
     };
+    return null;
 };
 
 function autoSizeAll(skipHeader) {
@@ -70,10 +74,14 @@ function luu_de_tai() {
     let ngay_thuc_hien = document.getElementById('ngay_thuc_hien').value;
     let mo_ta = document.getElementById('mo_ta').value;
     let detai = {
+      'detai_id': 0,
       'ten_de_tai': ten_de_tai,
       'nguoi_thuc_hien': nguoi_thuc_hien,
       'ngay_thuc_hien': ngay_thuc_hien,
       'mo_ta': mo_ta
+    };
+    if (onSelectionChanged() !== null) {
+        detai['detai_id'] = onSelectionChanged()['detai_id']
     };
     sendData(detai, 'luu');
     };
@@ -100,3 +108,18 @@ function xoa_de_tai() {
     detai = onSelectionChanged();
     sendData(detai, 'xoa');
     };
+
+function sua_de_tai() {
+    detai = onSelectionChanged();
+    document.getElementById('ten_de_tai').value = detai.ten_de_tai;
+    document.getElementById('nguoi_thuc_hien').value = detai.nguoi_thuc_hien;
+    document.getElementById('ngay_thuc_hien').value = detai.ngay_thuc_hien;
+    document.getElementById('mo_ta').value = detai.mo_ta;
+}
+
+function huy() {
+    document.getElementById('ten_de_tai').value = '';
+    document.getElementById('nguoi_thuc_hien').value = '';
+    document.getElementById('ngay_thuc_hien').value = '';
+    document.getElementById('mo_ta').value = '';
+}
