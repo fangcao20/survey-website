@@ -22,12 +22,12 @@ def load_detai():
     return records
 
 def insert_detai(detai):
-    values = (detai['ten_de_tai'],
+    values = (1, detai['ten_de_tai'],
               detai['nguoi_thuc_hien'],
               detai['ngay_thuc_hien'],
               detai['mo_ta'])
-    sql = "INSERT INTO detai(ten_de_tai, nguoi_thuc_hien, ngay_thuc_hien, mo_ta) VALUES (%s, %s, %s, %s)"
-    mycursor.executemany(sql, values)
+    sql = "INSERT INTO detai(user_id, ten_de_tai, nguoi_thuc_hien, ngay_thuc_hien, mo_ta) VALUES (%s, %s, %s, %s, %s)"
+    mycursor.execute(sql, values)
     print("Done")
 
 # mycursor.execute("SELECT * FROM detai")

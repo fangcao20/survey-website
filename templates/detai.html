@@ -11,14 +11,14 @@
     <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
     <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+    <script src="https://unpkg.com/gridjs/plugins/selection/dist/selection.umd.js"></script>
     <style>
       #div_trai {
         /* height: 700px; */
       }
 
       #div_phai {
-        height: 700px;
+        height: 900px;
 <!--        background-color: skyblue;-->
       }
 
@@ -125,8 +125,49 @@
           <div id="table"></div>
         </div>
       </div>
-    </div>
-    <script>
+      <script>
+      mygrid = new gridjs.Grid({
+        columns: [
+          {
+            id: 'myCheckbox',
+            name: 'Chọn',
+            plugin: {
+              // install the RowSelection plugin
+              component: gridjs.plugins.selection.RowSelection,
+            }
+           },
+          { id: 'name', name: 'Tên đề tài' },
+          { id: 'person', name: 'Người thực hiện' },
+          { id: 'date', name: 'Ngày thực hiện'},
+          { id: 'description', name: 'Mô tả'},
+        ],
+        data: [
+          {% for detai in detais %}
+            {
+              name: '{{ detai.ten_de_tai }}',
+              person: '{{ detai.nguoi_thuc_hien | replace("'", "\\'") }}',
+              date: '{{ detai.ngay_thuc_hien }}',
+              description: '{{ detai.mo_ta | replace("'", "\\'") }}'
+            },
+          {% endfor %}
+        ],
+        search: {
+          selector: (cell, rowIndex, cellIndex) => [0, 1, 4].includes(cellIndex) ? cell : null,
+        },
+        row: {
+          onClick: (row, index) => {
+            console.log('Hàng được chọn:', row);
+            // Thực hiện xử lý khi hàng được chọn
+          }
+        },
+        sort: true,
+<!--        pagination: true,-->
+        height: '500px', // Đặt chiều cao của Grid
+        fixedHeader: true, // Cố định header khi cuộn
+        resizable: true, // Cho phép điều chỉnh kích thước cột
+
+      }).render(document.getElementById('table'));
+
       function luu_de_tai() {
         let ten_de_tai = document.getElementById('ten_de_tai').value;
         let nguoi_thuc_hien = document.getElementById('nguoi_thuc_hien').value;
@@ -149,36 +190,14 @@
           data: JSON.stringify({ 'detai': detai }),
           success: function() {
             console.log(detai);
+            location.reload();
           },
           error: function(error) {
             console.log(error);
           }
         });
       };
-
-      new gridjs.Grid({
-        columns: [
-          { id: 'name', name: 'Tên đề tài' },
-          { id: 'person', name: 'Người thực hiện' },
-          { id: 'date', name: 'Ngày thực hiện'},
-          { id: 'description', name: 'Mô tả'}
-        ],
-        data: [
-          {% for detai in detais %}
-            {
-              name: '{{ detai.ten_de_tai }}',
-              person: '{{ detai.nguoi_thuc_hien | replace("'", "\\'") }}',
-              date: '{{ detai.ngay_thuc_hien }}',
-              description: '{{ detai.mo_ta | replace("'", "\\'") }}'
-            },
-          {% endfor %}
-        ],
-        search: {
-          selector: (cell, rowIndex, cellIndex) => [0, 1, 4].includes(cellIndex) ? cell : null,
-        },
-        sort: true,
-        pagination: true,
-      }).render(document.getElementById('table'));
     </script>
+    </div>
   </body>
 </html>
