@@ -6,12 +6,12 @@
     <title>Đề tài</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
-<script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
-    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
-    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://unpkg.com/gridjs/plugins/selection/dist/selection.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+    <link rel="stylesheet"
+     href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css"/>
+    <link rel="stylesheet"
+     href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css"/>
     <style>
       #div_trai {
         /* height: 700px; */
@@ -111,10 +111,9 @@
           <!-- Button group -->
           <div id="button_group" class="mt-5 d-flex mb-5">
             <div class="container ms-auto">
-              <button type="button" class="btn btn-primary">+Thêm</button>
-              <button type="button" class="btn btn-success" onclick="luu_de_tai()">Lưu</button>
-              <button type="button" class="btn btn-secondary">Sửa</button>
-              <button type="button" class="btn btn-danger">Xóa</button>
+              <button type="button" id="luu" class="btn btn-success" onclick="luu_de_tai()">Lưu</button>
+              <button type="button" id="sua" class="btn btn-secondary">Sửa</button>
+              <button type="button" id="xoa" class="btn btn-danger" onclick="xoa_de_tai()">Xóa</button>
             </div>
           </div>
         </div>
@@ -122,82 +121,14 @@
         <!-- Hiện thị data grid -->
         <div id="div_phai" class="col-lg-7">
           <h2>Danh sách đề tài</h2>
-          <div id="table"></div>
+          <div id="myGrid" style="height: 500px" class="ag-theme-alpine"></div>
         </div>
       </div>
-      <script>
-      mygrid = new gridjs.Grid({
-        columns: [
-          {
-            id: 'myCheckbox',
-            name: 'Chọn',
-            plugin: {
-              // install the RowSelection plugin
-              component: gridjs.plugins.selection.RowSelection,
-            }
-           },
-          { id: 'name', name: 'Tên đề tài' },
-          { id: 'person', name: 'Người thực hiện' },
-          { id: 'date', name: 'Ngày thực hiện'},
-          { id: 'description', name: 'Mô tả'},
-        ],
-        data: [
-          {% for detai in detais %}
-            {
-              name: '{{ detai.ten_de_tai }}',
-              person: '{{ detai.nguoi_thuc_hien | replace("'", "\\'") }}',
-              date: '{{ detai.ngay_thuc_hien }}',
-              description: '{{ detai.mo_ta | replace("'", "\\'") }}'
-            },
-          {% endfor %}
-        ],
-        search: {
-          selector: (cell, rowIndex, cellIndex) => [0, 1, 4].includes(cellIndex) ? cell : null,
-        },
-        row: {
-          onClick: (row, index) => {
-            console.log('Hàng được chọn:', row);
-            // Thực hiện xử lý khi hàng được chọn
-          }
-        },
-        sort: true,
-<!--        pagination: true,-->
-        height: '500px', // Đặt chiều cao của Grid
-        fixedHeader: true, // Cố định header khi cuộn
-        resizable: true, // Cho phép điều chỉnh kích thước cột
-
-      }).render(document.getElementById('table'));
-
-      function luu_de_tai() {
-        let ten_de_tai = document.getElementById('ten_de_tai').value;
-        let nguoi_thuc_hien = document.getElementById('nguoi_thuc_hien').value;
-        let ngay_thuc_hien = document.getElementById('ngay_thuc_hien').value;
-        let mo_ta = document.getElementById('mo_ta').value;
-        let detai = {
-          'ten_de_tai': ten_de_tai,
-          'nguoi_thuc_hien': nguoi_thuc_hien,
-          'ngay_thuc_hien': ngay_thuc_hien,
-          'mo_ta': mo_ta
-        };
-        sendData(detai);
-      };
-
-      function sendData(detai) {
-        $.ajax({
-          url: '/insert_detai',
-          type: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify({ 'detai': detai }),
-          success: function() {
-            console.log(detai);
-            location.reload();
-          },
-          error: function(error) {
-            console.log(error);
-          }
-        });
-      };
-    </script>
     </div>
+    <script>
+      var detais = {{ detais|tojson }};
+    </script>
+    <script src="static/detai.js">
+    </script>
   </body>
 </html>

@@ -28,8 +28,18 @@ def insert_detai(detai):
               detai['mo_ta'])
     sql = "INSERT INTO detai(user_id, ten_de_tai, nguoi_thuc_hien, ngay_thuc_hien, mo_ta) VALUES (%s, %s, %s, %s, %s)"
     mycursor.execute(sql, values)
-    print("Done")
+    print("Insert")
 
-# mycursor.execute("SELECT * FROM detai")
-# result = mycursor.fetchall()
-# print(result)
+def delete_detai(detai):
+    values = (1, detai['ten_de_tai'],
+              detai['nguoi_thuc_hien'],
+              detai['mo_ta'])
+    sql = """
+            DELETE FROM detai
+            WHERE user_id = %s AND
+                  ten_de_tai = %s AND
+                  nguoi_thuc_hien = %s AND
+                  mo_ta = %s;
+        """
+    mycursor.execute(sql, values)
+    print("Delete")

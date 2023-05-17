@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from database import load_detai, insert_detai
+from database import load_detai, insert_detai, delete_detai
 
 app = Flask(__name__)
 
@@ -12,8 +12,13 @@ def detai_page():
 def input_detai():
     data = request.get_json()
     detai = data['detai']
-    insert_detai(detai)
+    action = data['action']
+    if action == 'luu':
+        insert_detai(detai)
+    elif action == 'xoa':
+        delete_detai(detai)
     return jsonify(detai)
+
 
 if __name__ == "__main__":
   app.run(debug=True)
