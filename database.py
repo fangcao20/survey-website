@@ -1,4 +1,5 @@
 import mysql.connector as connector
+import random
 
 mydb = connector.connect(user='root', password='Phiphi05',
                          host='localhost',
@@ -31,7 +32,7 @@ def insert_detai(detai):
         mycursor.execute(sql, values)
         print("Insert")
     else:
-        sql = """UPDATE detai SET 
+        sql = """UPDATE detai SET
                     user_id = %s,
                     ten_de_tai = %s,
                     nguoi_thuc_hien = %s,
@@ -58,6 +59,36 @@ def delete_detai(detai):
     mycursor.execute(sql, values)
     print("Delete")
 
-mydb.commit()
 
-# Đóng kết nối
+def load_cauhoi(detai_id):
+    mycursor.execute("SELECT * FROM cauhoi WHERE detai_id = %s", (detai_id, ))
+    result = mycursor.fetchall()
+
+    # Lấy thông tin các cột
+    columns = [column[0] for column in mycursor.description]
+
+    # Tạo danh sách các dictionary
+    records = []
+    for row in result:
+        record = {}
+        for i in range(len(columns)):
+            record[columns[i]] = row[i]
+        records.append(record)
+    return records
+
+
+def load_nhomcauhoi(detai_id):
+    mycursor.execute("SELECT * FROM nhom_cauhoi WHERE detai_id = %s", (detai_id, ))
+    result = mycursor.fetchall()
+
+    # Lấy thông tin các cột
+    columns = [column[0] for column in mycursor.description]
+
+    # Tạo danh sách các dictionary
+    records = []
+    for row in result:
+        record = {}
+        for i in range(len(columns)):
+            record[columns[i]] = row[i]
+        records.append(record)
+    return records

@@ -2,4 +2,9 @@ Flask
 sqlalchemy
 pymysql
 cryptography
-mysql
+mysql-connector-python
+pandas==1.3.5
+psython
+pingouin
+prettytable
+openpyxl

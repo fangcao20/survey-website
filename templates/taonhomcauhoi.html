@@ -1,0 +1,38 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Tạo nhóm câu hỏi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-1">
+            <label for="recipient-name" class="col-form-label">Tên nhóm</label>
+            <br>
+            <span class="fs-6 fw-light fst-italic">Ví dụ: Cơ sở vật chất</span>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="mb-1">
+            <label for="message-text" class="col-form-label">Mã nhóm</label>
+            <br>
+            <span class="fs-6 fw-light fst-italic">Ví dụ: CSVC</span>
+            <input class="form-control" id="message-text">
+          </div>
+        </form>
+      </div>
+      <div id="gridNhomCauHoi" style="height: 200px; width: 95%; margin: auto" class="ag-theme-alpine mt-2"></div>
+      <div class="modal-footer" style=" display: flex; justify-content: space-between;">
+        <div class="button-group-left" style="flex-grow: 1;">
+          <button type="button" class="btn btn-success" onclick="luu_nhom_cauhoi()">Lưu</button>
+          <button type="button" class="btn btn-secondary" onclick="sua_nhom_cauhoi()">Sửa</button>
+          <button type="button" class="btn btn-danger" onclick="xoa_nhom_cauhoi()">Xóa</button>
+          <button type="button" class="btn btn-primary" onclick="huy_nhom_cauhoi()">Hủy</button>
+        </div>
+        <div class="button-group-right">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
