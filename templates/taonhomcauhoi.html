@@ -11,13 +11,13 @@
             <label for="recipient-name" class="col-form-label">Tên nhóm</label>
             <br>
             <span class="fs-6 fw-light fst-italic">Ví dụ: Cơ sở vật chất</span>
-            <input type="text" class="form-control" id="recipient-name">
+            <input type="text" class="form-control" id="ten_nhom" required>
           </div>
           <div class="mb-1">
             <label for="message-text" class="col-form-label">Mã nhóm</label>
             <br>
             <span class="fs-6 fw-light fst-italic">Ví dụ: CSVC</span>
-            <input class="form-control" id="message-text">
+            <input class="form-control" id="ma_nhom" required>
           </div>
         </form>
       </div>
@@ -36,3 +36,47 @@
     </div>
   </div>
 </div>
+
+<script>
+  var sua_button_clicked = false;
+  function luu_nhom_cauhoi() {
+      let ten_nhom = document.getElementById('ten_nhom').value;
+      let ma_nhom = document.getElementById('ma_nhom').value;
+      let nhomcauhoi = {
+        'detai_id': detai_id,
+        'ten_nhom': ten_nhom,
+        'ma_nhom': ma_nhom,
+      };
+
+      if (sua_button_clicked == true){
+        if (onSelectionChanged() !== null) {
+            nhomcauhoi['nhom_cauhoi_id'] = onSelectionChanged()['nhom_cauhoi_id'];
+            sua_button_clicked = false;
+        };
+      } else {
+            nhomcauhoi['nhom_cauhoi_id'] = 0;
+      };
+
+      sendData(nhomcauhoi, 'luu_nhom_cauhoi');
+      document.getElementById('ten_nhom').value = '';
+      document.getElementById('ma_nhom').value = '';
+      };
+
+
+  function xoa_nhom_cauhoi() {
+      let nhomcauhoi = onSelectionChanged();
+      sendData(nhomcauhoi, 'xoa_nhom_cauhoi');
+      };
+
+  function sua_nhom_cauhoi() {
+      let nhomcauhoi = onSelectionChanged();
+      sua_button_clicked = true;
+      document.getElementById('ten_nhom').value = nhomcauhoi['ten_nhom'];
+      document.getElementById('ma_nhom').value = nhomcauhoi['ma_nhom'];
+  }
+
+  function huy_nhom_cauhoi() {
+      document.getElementById('ten_nhom').value = '';
+      document.getElementById('ma_nhom').value = '';
+  }
+</script>

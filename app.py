@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from database import load_detai, insert_detai, delete_detai, load_cauhoi, load_nhomcauhoi
+from database import load_detai, insert_detai, delete_detai, load_cauhoi, load_nhomcauhoi, insert_nhom_cauhoi,delete_nhom_cauhoi
 from phantich import phantichfile
 
 app = Flask(__name__)
@@ -52,11 +52,20 @@ def taocauhoi_page():
 
 @app.route("/taocauhoi_data", methods=["POST"])
 def taocauhoi_data():
-    data = request.get_json()
-    detai_id = data['detai_id']
-    ten_de_tai = data['ten_de_tai']
-    cauhois = load_cauhoi(detai_id)
-    nhomcauhois = load_nhomcauhoi(detai_id)
+    dt = request.get_json()
+    data = dt['data']
+    action = dt['action']
+    if 'detai_id' in data:
+        detai_id = data["detai_id"]
+        if action == 'luu_nhom_cauhoi':
+            insert_nhom_cauhoi(data)
+        elif action == 'xoa_nhom_cauhoi':
+            delete_nhom_cauhoi(data)
+
+        cauhois = load_cauhoi(detai_id)
+        nhomcauhois = load_nhomcauhoi(detai_id)
+    else:
+        print('"detai_id" not in data')
     return(jsonify(cauhois=cauhois, nhomcauhois=nhomcauhois))
 
 

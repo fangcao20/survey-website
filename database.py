@@ -92,3 +92,32 @@ def load_nhomcauhoi(detai_id):
             record[columns[i]] = row[i]
         records.append(record)
     return records
+
+def insert_nhom_cauhoi(nhomcauhoi):
+    values = (nhomcauhoi['detai_id'],
+              nhomcauhoi['ma_nhom'],
+              nhomcauhoi['ten_nhom'])
+    if nhomcauhoi['nhom_cauhoi_id'] == 0:
+        sql = "INSERT INTO nhom_cauhoi(detai_id, ma_nhom, noi_dung) VALUES (%s, %s, %s)"
+        mycursor.execute(sql, values)
+        print("Insert")
+    else:
+        sql = """UPDATE nhom_cauhoi SET
+                        ma_nhom = %s,
+                        noi_dung = %s
+                    WHERE nhom_cauhoi_id = %s
+                    """
+        values = (nhomcauhoi['ma_nhom'],
+                  nhomcauhoi['ten_nhom'],
+                  nhomcauhoi['nhom_cauhoi_id'])
+        mycursor.execute(sql, values)
+        print("Update")
+
+def delete_nhom_cauhoi(nhomcauhoi):
+    values = (nhomcauhoi['nhom_cauhoi_id'],)
+    sql = """
+            DELETE FROM nhom_cauhoi
+            WHERE nhom_cauhoi_id = %s;
+        """
+    mycursor.execute(sql, values)
+    print("Delete")

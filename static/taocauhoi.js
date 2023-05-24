@@ -22,8 +22,8 @@ const gridOptions = {
     onCellClicked: params => {
         console.log('cell was clicked', params.data)
      },
-//         rowSelection: 'single',
-//        onSelectionChanged: onSelectionChanged,
+//    rowSelection: 'single',
+//    onSelectionChanged: onSelectionChanged,
     };
 
 
@@ -53,8 +53,8 @@ const gridOptions2 = {
         console.log('cell was clicked', params)
         return params
      },
-    //         rowSelection: 'single',
-    //        onSelectionChanged: onSelectionChanged,
+//    rowSelection: 'single',
+//    onSelectionChanged: onSelectionChanged,
 };
 
 const columnNhomCauHoi = [
@@ -82,17 +82,31 @@ const gridOptionsNhomCauHoi = {
         console.log('cell was clicked', params)
         return params
      },
-    //         rowSelection: 'single',
-    //        onSelectionChanged: onSelectionChanged,
+    rowSelection: 'single',
+    onSelectionChanged: onSelectionChanged,
 };
 
 
-
+function onSelectionChanged() {
+    const selectedRows = gridOptionsNhomCauHoi.api.getSelectedRows();
+    if (selectedRows.length > 0) {
+        console.log(selectedRows);
+        let nhomcauhoi = {
+          'detai_id': selectedRows[0]['Đề tài ID'],
+          'nhom_cauhoi_id': selectedRows[0]['ID'],
+          'ma_nhom': selectedRows[0]['Mã nhóm'],
+          'ten_nhom': selectedRows[0]['Tên nhóm'],
+        };
+        return nhomcauhoi;
+    };
+    return null;
+};
 
 function onFirstDataRendered(params) {
   params.api.sizeColumnsToFit();
 };
 
+var detai_id;
 function chon_de_tai() {
     let select = document.getElementById('chon_detai');
     let option = select.options[select.selectedIndex];
@@ -103,7 +117,8 @@ function chon_de_tai() {
         detai_id: option.value,
         ten_de_tai: option.text
     };
-    sendData(data);
+    sendData(data,"");
+    detai_id = option.value;
 };
 
 function chon_nhom_cauhoi(){
@@ -122,12 +137,12 @@ function chon_nhom_cauhoi(){
     document.getElementById('ma_cauhoi').value = ma_nhom;
 };
 
-function sendData(data) {
+function sendData(data, action) {
     $.ajax({
         url: '/taocauhoi_data',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(data),
+        data: JSON.stringify({data: data, action: action}),
         success: function(response) {
             const rows1 = [];
             const rows2 = [];
@@ -197,5 +212,3 @@ document.addEventListener('DOMContentLoaded', () => {
   const gridNhomCauHoi = document.querySelector('#gridNhomCauHoi');
   new agGrid.Grid(gridNhomCauHoi, gridOptionsNhomCauHoi);
 });
-
-
