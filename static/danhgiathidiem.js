@@ -1,38 +1,19 @@
-const dulieutudetai = localStorage.getItem('dulieutudetai');
-if (dulieutudetai == 'true') {
-    var dataFile = JSON.parse(localStorage.getItem('data'));
+var macauhois = JSON.parse(localStorage.getItem('macauhois'));
+var cautralois = JSON.parse(localStorage.getItem('cautralois'));
+var tennhom = Array.from(new Set(macauhois.map(col => col.match(/[a-zA-Z]+/)[0])));
 
-    const nameCol = dataFile[0];
-    var dataDict = dataFile.slice(1).map(row => {
-      const obj = {};
-      for (let i = 0; i < row.length; i++) {
-        obj[nameCol[i]] = row[i];
-      }
-      return obj;
-    });
-    console.log(dataDict);
-    sendData(dataDict, '');
+var dataDict  = [];
 
-    let colsName = dataFile[0];
-    var tennhom = Array.from(new Set(colsName.map(col => col.match(/[a-zA-Z]+/)[0])));
-} else {
-    var macauhois = JSON.parse(localStorage.getItem('macauhois'));
-    var cautralois = JSON.parse(localStorage.getItem('cautralois'));
-    var tennhom = Array.from(new Set(macauhois.map(col => col.match(/[a-zA-Z]+/)[0])));
-
-    var dataDict  = [];
-
-    for (const key in cautralois) {
-      const values = cautralois[key];
-      const new_dict = {};
-      for (let i = 0; i < macauhois.length; i++) {
-        new_dict[macauhois[i]] = values[i];
-      };
-      dataDict.push(new_dict);
-    };
-    console.log(dataDict);
-    sendData(dataDict, '');
+for (const key in cautralois) {
+  const values = cautralois[key];
+  const new_dict = {};
+  for (let i = 0; i < macauhois.length; i++) {
+    new_dict[macauhois[i]] = values[i];
+  };
+  dataDict.push(new_dict);
 };
+console.log(dataDict);
+    sendData(dataDict, '');
 
 let html = '<option value="">Chọn nhóm câu hỏi</option>';
 for (nhom of tennhom){
@@ -181,7 +162,7 @@ function sendData(data, nhomcauhoi) {
                 document.getElementById('crbalpha').style.color = '#d64b4b';
             };
 
-            document.getElementById('comau').innerHTML = dataDict.length;
+            document.getElementById('comau').innerHTML = response.comau;
             document.getElementById('soluongbien').innerHTML = response.soluongbien;
             hienthi_cronbach(response.cronbach_table);
 

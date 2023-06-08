@@ -40,7 +40,6 @@ function xulyfile(){
         const worksheet = workbook.Sheets[firstSheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-        localStorage.setItem('data', JSON.stringify(jsonData));
         macauhoisfile1 = jsonData[0].slice();
         cautraloisfile1 = {};
         macauhoisfile2 = jsonData[0].slice();
@@ -51,6 +50,10 @@ function xulyfile(){
             cautraloisfile2[row] = jsonData[row];
         };
         tabledulieudetai(macauhoisfile1, cautraloisfile1);
+        localStorage.setItem('macauhois', JSON.stringify(macauhoisfile1));
+        localStorage.setItem('cautralois', JSON.stringify(cautraloisfile1));
+        document.getElementById('button_phantich').style.display = 'block';
+        sendDatasauxoabienvahoantac(macauhoisfile1, cautraloisfile1);
     };
     reader.readAsArrayBuffer(file);
 
@@ -61,23 +64,23 @@ $(document).ready(function () {
    $("select").select2();
 });
 
-var dulieutudetai = 'false';
+var dulieutudetai = 'true';
 function tudetai() {
     document.getElementById('input_detai').style.display = "block";
     document.getElementById('input_dulieu').style.display = "none";
     document.getElementById('chonthoigian').style.display = "block";
-    dulieutudetai = 'false';
+    dulieutudetai = 'true';
     localStorage.setItem('dulieutudetai', dulieutudetai);
-    document.querySelector('table').value = '';
+    document.querySelector('#tabledulieu').style.display = "none";
 };
 
 function tuteptin() {
     document.getElementById('input_detai').style.display = "none";
     document.getElementById('input_dulieu').style.display = "block";
     document.getElementById('chonthoigian').style.display = "none";
-    dulieutudetai = 'true';
+    dulieutudetai = 'false';
     localStorage.setItem('dulieutudetai', dulieutudetai);
-    document.querySelector('table').value = '';
+    document.querySelector('#tabledulieu').style.display = "none";
 };
 
 
@@ -177,6 +180,8 @@ function tabledulieudetai(macauhois, cautralois) {
     };
     document.getElementById('bodydulieudetai').innerHTML = body;
     choncot();
+
+    document.querySelector('#tabledulieu').style.display = "block";
 };
 
 var tenbiens = [];
@@ -220,6 +225,9 @@ $(document).ready(function() {
         tenbiens.pop();
         thuchienxoabien(tenbiens, macauhoisfile1, cautraloisfile1);
         tabledulieudetai(macauhoisfile1, cautraloisfile1);
+        localStorage.setItem('macauhois', JSON.stringify(macauhoisfile1));
+        localStorage.setItem('cautralois', JSON.stringify(cautraloisfile1));
+        sendDatasauxoabienvahoantac(macauhoisfile1, cautraloisfile1);
     });
 });
 
@@ -232,6 +240,9 @@ $(document).ready(function() {
         tenbiens.push(bienvuaxoa);
         thuchienxoabien(tenbiens, macauhoisfile1, cautraloisfile1);
         tabledulieudetai(macauhoisfile1, cautraloisfile1);
+        localStorage.setItem('macauhois', JSON.stringify(macauhoisfile1));
+        localStorage.setItem('cautralois', JSON.stringify(cautraloisfile1));
+        sendDatasauxoabienvahoantac(macauhoisfile1, cautraloisfile1);
     });
 });
 

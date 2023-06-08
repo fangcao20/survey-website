@@ -3,7 +3,6 @@ import psython as psy
 import json
 import re
 import numpy as np
-from prettytable import PrettyTable
 
 
 def cronbach(data, nhomcauhoi):
@@ -21,7 +20,9 @@ def cronbach(data, nhomcauhoi):
   soluongbien = len(new_data[0].keys())
 
   df = pd.json_normalize(new_data)
+  print(df.shape[0])
   df.dropna(inplace=True)
+  print(df.shape[0])
   cronbach_list = psy.cronbach_alpha_scale_if_deleted(df)
   cronbach_json = json.loads(cronbach_list[1].to_json(orient="split"))
   cronbach_dict = {}
@@ -37,20 +38,10 @@ def cronbach(data, nhomcauhoi):
 def efa():
   from factor_analyzer import FactorAnalyzer
   from factor_analyzer.factor_analyzer import calculate_bartlett_sphericity, calculate_kmo
-  import os
 
-  folder = 'FILES'
-  files = os.listdir(folder)
-
-  if len(files) > 0:
-    file_path = os.path.join(folder, files[0])
-    if files[0].endswith('xlsx') or files[0].endswith('xls'):
-      df = pd.read_excel(file_path)
-    else:
-      df = pd.read_csv(file_path)
-  else:
-    df = pd.read_csv('data.csv')
+  df = pd.read_csv('data.csv')
   df.dropna(inplace=True)
+  comau = df.shape[0]
   result = {}
   chi_square_value, p_value = calculate_bartlett_sphericity(df)
   kmo_all, kmo_model = calculate_kmo(df)
@@ -73,6 +64,7 @@ def efa():
   result['tichluy'] = phuongsai[2].tolist()
   matran = matranxoay(fa, df)
   result['matran'] = matran
+  result['comau'] = comau
   return result
 
 

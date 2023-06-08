@@ -274,7 +274,6 @@ def load_dulieudetai(data):
         for diem in result:
             row.append(diem[0])
         cautralois[i+1] = row
-
-    return (macauhois,cautralois)
+    return macauhois, cautralois
 
 

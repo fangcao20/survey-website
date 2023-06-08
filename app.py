@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, jsonify
 from database import load_detai, insert_detai, delete_detai, load_cauhoi, load_nhomcauhoi, insert_nhom_cauhoi, delete_nhom_cauhoi
 from database import insert_cauhoi, delete_cauhoi, load_luachon, load_thangdolikert, load_dulieudetai
 from phantich import cronbach, efa
-import os
 import csv
 
 
@@ -130,31 +129,16 @@ def phantich_data():
         tile = efa_result['tile']
         tichluy = efa_result['tichluy']
         matran = efa_result['matran']
+        comau = efa_result['comau']
 
         return jsonify(cronbach_table=cronbach_table, cronbach_total=cronbach_total,
                        soluongbien=soluongbien, p_value=p_value, kmo=kmo, ev=ev,
-                       binhphuong=binhphuong, tile=tile, tichluy=tichluy, matran=matran)
-    else:
-        folder = 'FILES'
+                       binhphuong=binhphuong, tile=tile, tichluy=tichluy, matran=matran, comau=comau)
 
-        f = request.files['file']
-
-        app.config['UPLOAD_FOLDER'] = folder
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], f.filename)
-        f.save(file_path)
-        return "Thành coong"
 
 @app.route("/detai_data", methods=["POST"])
 def detai_data():
-    folder = 'FILES'
-    if len(os.listdir(folder)) > 0:
-        for filename in os.listdir(folder):
-            file_path = os.path.join(folder, filename)
-            if os.path.isfile(file_path):
-                os.remove(file_path)
-
     data = request.get_json()
-    print(len(data.keys()))
     if len(data.keys()) == 2:
         macauhois = data['macauhois']
         cautralois = data['cautralois']
