@@ -44,6 +44,7 @@
       let ma_nhom = document.getElementById('ma_nhom').value;
       let nhomcauhoi = {
         'detai_id': detai_id,
+        'nhom_cauhoi_id': 0,
         'ten_nhom': ten_nhom,
         'ma_nhom': ma_nhom,
       };
@@ -53,8 +54,6 @@
             nhomcauhoi['nhom_cauhoi_id'] = onSelectionChanged()['nhom_cauhoi_id'];
             sua_button_clicked = false;
         };
-      } else {
-            nhomcauhoi['nhom_cauhoi_id'] = 0;
       };
 
       sendData(nhomcauhoi, 'luu_nhom_cauhoi');

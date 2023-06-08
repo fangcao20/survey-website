@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Phân tích</title>
+    <title>Chọn dữ liệu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -11,10 +11,9 @@
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
-
-    <script src="static/phantich.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script src="static/chondulieu.js"></script>
     <style>
       #div_trai {
         position: relative;
@@ -32,10 +31,9 @@
         color: #0F62FE;
       }
 
-      h1, h2 {
+      h1, h2, h5 {
         color: #0F62FE;
-        font-weight: 600;
-        margin-bottom: 15px;
+        margin-bottom: 5px;
       }
 
       #button_group > .container > button {
@@ -97,12 +95,32 @@
         border: 2px solid #0F62FE;
       }
 
+      #input_detai, #input_dulieu {
+        display: none;
+      }
+
+      #input_dulieu > label {
+        border: 1px solid #0F62FE;
+        border-radius: 5px;
+        display: inline-block;
+        cursor: pointer;
+        padding: 3px 10px;
+      }
+
+      .stt-css {
+        font-weight: bold;
+      }
+
+    .selected {
+        background: #9fc5e8 !important;
+        border: 1px solid #9fc5e8;
+    }
     </style>
   </head>
   <body>
     <!-- Nav bar -->
     <div id="navbar">
-      <nav class="navbar navbar-expand-sm bg-body-tertiary shadow-sm p-3 mb-5 bg-body-tertiary rounded">
+      <nav class="navbar navbar-expand-sm bg-body-tertiary shadow-sm p-3 mb-3 bg-body-tertiary rounded">
         <div class="container-fluid">
           <a class="navbar-brand" href="#"></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -141,46 +159,60 @@
       <div class="row">
 
         <!-- Input câu hỏicc -->
-        <div id="div_trai" class="col-lg-5">
-          <h1>Phân tích</h1>
-          <form method="POST" action="/insert_detai">
-              <table>
-                <tr class="row">
-                  <td class="col col-4">
-                    <label>Đề tài</label>
-                  </td>
-                  <td class="col col-8">
-                    <select class="form-select mb-2" aria-label="Default select example" id="chon_detai" onchange="chon_de_tai()">
-                      <option value="">Chọn đề tài...</option>
-                      {% for i in range(0, so_luong_detai) %}
-                      <option value="{{ detais[i]['detai_id'] }}">{{ detais[i].ten_de_tai }}</option>
-                      {% endfor %}
-                    </select>
-                  </td>
-                </tr>
-                <tr class="row">
-                  <td class="col col-4">
-                    <label>Nhập dữ liệu</label>
-                  </td>
-                  <td class="col col-8">
-                    <input type="file" class="form-control" onchange="xulyfile()" id="fileinput">
-                  </td>
-                </tr>
-              </table>
+        <div id="div_trai">
+          <form method="POST" action="/phantich_data" id="myForm" enctype="multipart/form-data">
+              <div class="d-flex align-items-center">
+                  <h5>Chọn dữ liệu</h5>
+                  <div class="form-check" style="margin-left: 50px; margin-right: 200px">
+                    <input class="form-check-input" name="Chọn dữ liệu" type="radio" value="Từ đề tài" onclick="tudetai()">
+                    <label class="form-check-label">Từ đề tài</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" name="Chọn dữ liệu" type="radio" value="Từ tệp tin" onclick="tuteptin()">
+                    <label class="form-check-label">Từ tệp tin</label>
+                  </div>
+                </div>
+
+              <div id="input_detai">
+                <select class="form-select" aria-label="Default select example" id="chon_detai" onchange="chon_de_tai()" style="width: 100%">
+                  <option value="">Chọn đề tài...</option>
+                  {% for i in range(0, so_luong_detai) %}
+                  <option value="{{ detais[i]['detai_id'] }}">{{ detais[i].ten_de_tai }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div id="chonthoigian" style="display: none; margin-top: 5px" >
+                  <label for="batdau">Thời gian bắt đầu</label>
+                  <input type="date" id="batdau" onchange="thoigianbatdau()">
+                  <label for="ketthuc" style="margin-left: 100px">Thời gian kết thúc</label>
+                  <input type="date" id="ketthuc" onchange="thoigianketthuc()">
+                  <button type="button" class="btn btn-primary" style="margin-left: 100px" onclick="hienthidulieudetai()">Tải bảng dữ liệu</button>
+                  <button type="button" class="btn btn-danger" style="margin-left: 5px;" id="buttonxoabien" onclick="xoabien()">Xóa</button>
+                  <button type="button" class="btn btn-success" style="margin-left: 5px;" id="buttonhoantac" onclick="hoantac()">Hoàn tác</button>
+                  <div style="height: 500px; overflow: auto; border: 1px solid #eeeeee; border-radius: 2px;">
+                      <table class="table">
+                          <thead>
+                            <tr id="headerdulieudetai"></tr>
+                          </thead>
+                          <tbody id="bodydulieudetai"></tbody>
+                      </table>
+                  </div>
+              </div>
+
+              <div id="input_dulieu">
+                  <label for="fileinput" style="display: inline-block;">Chọn tệp tin</label>
+                  <div id="hienthitenfile" style="display: inline-block;"></div>
+                  <input type="file" onchange="hienthitenfile()" id="fileinput" style="display: none" name="file">
+                  <button type="submit" class="btn btn-primary" style="display: none; margin-left: 500px" id="submitfile">Hiển thị dữ liệu</button>
+                </div>
           </form>
           <div id="gridData" style="height: 500px; width: 100%" class="ag-theme-alpine mt-3"></div>
-        </div>
-
-        <!-- Hiện thị data grid -->
-        <div id="div_phai" class="col-lg-7">
-          <h2>Danh sách câu hỏi</h2>
-          <div id="cauhoikhaosat"></div>
-          <!-- Button group -->
           <div id="button_group" class="mt-5 d-flex mb-5">
-            <div class="container justify-content-end">
-              <button type="button" class="btn btn-success" onclick="luu_cauhoi()">Lưu</button>
-              <button type="button" class="btn btn-danger" onclick="xoa_cauhoi()">Xóa</button>
-              <button type="button" class="btn btn-primary" onclick="huy_cauhoi()">Hủy</button>
+            <div id="button_phantich" class="container ms-auto" style="display: none">
+              <button type="button" class="btn btn-success" id="danhgiathidiem">Đánh giá thí điểm</button>
+              <button type="button" class="btn btn-secondary">Sàng lọc câu hỏi</button>
+              <button type="button" class="btn btn-primary">Đánh giá chính thức</button>
             </div>
           </div>
         </div>

@@ -62,7 +62,7 @@
   <body>
     <!-- Nav bar -->
     <div id="navbar">
-      <nav class="navbar navbar-expand-sm bg-body-tertiary shadow-sm p-3 mb-5 bg-body-tertiary rounded" style="height: 60px">
+      <nav class="navbar navbar-expand-sm bg-body-tertiary shadow-sm p-3 mb-5 bg-body-tertiary rounded">
         <div class="container-fluid">
           <a class="navbar-brand" href="#"></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,10 +70,24 @@
           </button>
           <div class="navbar-collapse collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav mx-auto">
-              <a class="nav-link active" aria-current="page" href="/detai">Đề tài</a>
-              <a class="nav-link" href="/taocauhoi">Tạo câu hỏi</a>
-              <a class="nav-link" href="/khaosat">Khảo sát</a>
-              <a class="nav-link" href="/phantich">Phân tích</a>
+               <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/detai">Đề tài</a>
+               </li>
+               <li class="nav-item">
+                <a class="nav-link" href="/taocauhoi">Tạo câu hỏi</a>
+               </li>
+               <li class="nav-item">
+                <a class="nav-link" href="/khaosat">Khảo sát</a>
+               </li>
+               <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Phân tích</a>
+                 <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/chondulieu">Chọn dữ liệu</a></li>
+                  <li><a class="dropdown-item" href="/danhgiathidiem">Đánh giá thí điểm</a></li>
+                  <li><a class="dropdown-item" href="/sangloccauhoi">Sàng lọc câu hỏi</a></li>
+                  <li><a class="dropdown-item" href="/danhgiachinhthuc">Đánh giá chính thức</a></li>
+                </ul>
+               </li>
             </div>
             <button type="button" class="btn btn-primary">Đăng xuất</button>
           </div>

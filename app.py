@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, jsonify
-from database import load_detai, insert_detai, delete_detai, load_cauhoi, load_nhomcauhoi, insert_nhom_cauhoi,delete_nhom_cauhoi
-from phantich import phantichfile
+from database import load_detai, insert_detai, delete_detai, load_cauhoi, load_nhomcauhoi, insert_nhom_cauhoi, delete_nhom_cauhoi
+from database import insert_cauhoi, delete_cauhoi, load_luachon, load_thangdolikert, load_dulieudetai
+from phantich import cronbach, efa
+import os
+import csv
+
 
 app = Flask(__name__)
 
@@ -22,24 +26,6 @@ def input_detai():
         delete_detai(detai)
     return jsonify(detai)
 
-@app.route("/phantich")
-def phantich_page():
-    detais = load_detai()
-    so_luong_detai = len(detais)
-    return render_template("phantich.html", detais=detais, so_luong_detai=so_luong_detai)
-
-
-@app.route("/phantich_data", methods=["POST"])
-def phantich_data():
-    f = request.files['file']
-    f.save(f.filename)
-    data = phantichfile(f.filename)
-    df = data[0]
-    cronbach = data[1]
-    rows = df.to_dict(orient="records")
-    cols = list(df.columns)
-    data = [cols, rows]
-    return jsonify(data=data)
 
 @app.route("/taocauhoi")
 def taocauhoi_page():
@@ -62,11 +48,137 @@ def taocauhoi_data():
         elif action == 'xoa_nhom_cauhoi':
             delete_nhom_cauhoi(data)
 
+        if action == 'luu_cauhoi':
+            print(data)
+            insert_cauhoi(data)
+        elif action == 'xoa_cauhoi':
+            delete_cauhoi(data)
+
         cauhois = load_cauhoi(detai_id)
+        tracnghiems = []
+        likerts = []
+        for cauhoi in cauhois:
+            if cauhoi['loai_cau_tra_loi_id'] == 1:
+                tracnghiems.append({
+                    'cauhoi_id': cauhoi['cauhoi_id'],
+                    'luachons': load_luachon(cauhoi['cauhoi_id'])
+                })
+            elif cauhoi['loai_cau_tra_loi_id'] == 2:
+                likerts.append({
+                    'cauhoi_id': cauhoi['cauhoi_id'],
+                    'likerts': load_thangdolikert(cauhoi['cauhoi_id'])
+                })
         nhomcauhois = load_nhomcauhoi(detai_id)
     else:
         print('"detai_id" not in data')
-    return(jsonify(cauhois=cauhois, nhomcauhois=nhomcauhois))
+    return jsonify(cauhois=cauhois, nhomcauhois=nhomcauhois, tracnghiems=tracnghiems, likerts=likerts)
+
+
+@app.route('/khaosat')
+def khaosat_page():
+    detais = load_detai()
+    so_luong_detai = len(detais)
+    return render_template('khaosat.html', detais=detais,
+                           so_luong_detai=so_luong_detai)
+
+@app.route("/khaosat_data", methods=["POST"])
+def khaosat_data():
+    dt = request.get_json()
+    data = dt['data']
+    action = dt['action']
+    if 'detai_id' in data:
+        detai_id = data["detai_id"]
+        cauhois = load_cauhoi(detai_id)
+        tracnghiems = []
+        likerts = []
+        for cauhoi in cauhois:
+            if cauhoi['loai_cau_tra_loi_id'] == 1:
+                tracnghiems.append({
+                    'cauhoi_id': cauhoi['cauhoi_id'],
+                    'luachons': load_luachon(cauhoi['cauhoi_id'])
+                })
+            elif cauhoi['loai_cau_tra_loi_id'] == 2:
+                likerts.append({
+                    'cauhoi_id': cauhoi['cauhoi_id'],
+                    'likerts': load_thangdolikert(cauhoi['cauhoi_id'])
+                })
+    return jsonify(cauhois=cauhois, tracnghiems=tracnghiems, likerts=likerts)
+
+
+@app.route("/chondulieu")
+def chondulieu_page():
+    detais = load_detai()
+    so_luong_detai = len(detais)
+    return render_template("chondulieu.html", detais=detais, so_luong_detai=so_luong_detai)
+
+@app.route("/phantich_data", methods=["POST"])
+def phantich_data():
+    if request.headers.get("Content-Type") == "application/json":
+        dt = request.get_json()
+        data = dt['data']
+        nhomcauhoi = dt['nhomcauhoi']
+        cronbach_result = cronbach(data, nhomcauhoi)
+        cronbach_total = cronbach_result[0][0]
+        cronbach_table = cronbach_result[1]
+        soluongbien = cronbach_result[2]
+
+        efa_result = efa()
+        p_value = efa_result['p_value']
+        kmo = efa_result['kmo']
+        ev = efa_result['ev']
+        binhphuong = efa_result['binhphuong']
+        tile = efa_result['tile']
+        tichluy = efa_result['tichluy']
+        matran = efa_result['matran']
+
+        return jsonify(cronbach_table=cronbach_table, cronbach_total=cronbach_total,
+                       soluongbien=soluongbien, p_value=p_value, kmo=kmo, ev=ev,
+                       binhphuong=binhphuong, tile=tile, tichluy=tichluy, matran=matran)
+    else:
+        folder = 'FILES'
+
+        f = request.files['file']
+
+        app.config['UPLOAD_FOLDER'] = folder
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], f.filename)
+        f.save(file_path)
+        return "Thành coong"
+
+@app.route("/detai_data", methods=["POST"])
+def detai_data():
+    folder = 'FILES'
+    if len(os.listdir(folder)) > 0:
+        for filename in os.listdir(folder):
+            file_path = os.path.join(folder, filename)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+
+    data = request.get_json()
+    print(len(data.keys()))
+    if len(data.keys()) == 2:
+        macauhois = data['macauhois']
+        cautralois = data['cautralois']
+    else:
+        macauhois = load_dulieudetai(data)[0]
+        cautralois = load_dulieudetai(data)[1]
+
+    filename = 'data.csv'
+
+    with open(filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(macauhois)
+        for key, values in cautralois.items():
+            writer.writerow(values)
+
+    print(f'Data saved to {filename}')
+
+    return jsonify(macauhois=macauhois, cautralois=cautralois)
+
+
+
+@app.route("/danhgiathidiem")
+def danhgiathidiem():
+    return render_template('danhgiathidiem.html')
 
 
 if __name__ == "__main__":

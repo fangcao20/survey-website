@@ -13,6 +13,7 @@
     <link rel="stylesheet"
      href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css"/>
     <script src="static/taocauhoi.js"></script>
+    <script src="static/traloi.js"></script>
     <style>
       #div_trai {
         position: relative;
@@ -97,6 +98,9 @@
         right: 15px;
       }
 
+      #nhapsoluongluachon, #gridTraLoi, #gridLikert {
+        display: none;
+      }
 
 
     </style>
@@ -104,7 +108,7 @@
   <body>
     <!-- Nav bar -->
     <div id="navbar">
-      <nav class="navbar navbar-expand-sm bg-body-tertiary shadow-sm p-3 mb-5 bg-body-tertiary rounded" style="height: 60px">
+      <nav class="navbar navbar-expand-sm bg-body-tertiary shadow-sm p-3 mb-5 bg-body-tertiary rounded">
         <div class="container-fluid">
           <a class="navbar-brand" href="#"></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,10 +116,24 @@
           </button>
           <div class="navbar-collapse collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav mx-auto">
-              <a class="nav-link" href="/detai">Đề tài</a>
-              <a class="nav-link active" aria-current="page" href="/taocauhoi">Tạo câu hỏi</a>
-              <a class="nav-link" href="/khaosat">Khảo sát</a>
-              <a class="nav-link" href="/phantich">Phân tích</a>
+               <li class="nav-item">
+                <a class="nav-link" href="/detai">Đề tài</a>
+               </li>
+               <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/taocauhoi">Tạo câu hỏi</a>
+               </li>
+               <li class="nav-item">
+                <a class="nav-link" href="/khaosat">Khảo sát</a>
+               </li>
+               <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Phân tích</a>
+                 <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/chondulieu">Chọn dữ liệu</a></li>
+                  <li><a class="dropdown-item" href="/danhgiathidiem">Đánh giá thí điểm</a></li>
+                  <li><a class="dropdown-item" href="/sangloccauhoi">Sàng lọc câu hỏi</a></li>
+                  <li><a class="dropdown-item" href="/danhgiachinhthuc">Đánh giá chính thức</a></li>
+                </ul>
+               </li>
             </div>
             <button type="button" class="btn btn-primary">Đăng xuất</button>
           </div>
@@ -134,10 +152,10 @@
           <form method="POST" action="/insert_detai">
               <table>
                 <tr class="row">
-                  <td class="col col-3">
+                  <td class="col col-4">
                     <label>Đề tài</label>
                   </td>
-                  <td class="col col-9">
+                  <td class="col col-8">
                     <select class="form-select mb-2" aria-label="Default select example" id="chon_detai" onchange="chon_de_tai()">
                       <option selected>Chọn đề tài...</option>
                       {% for i in range(0, so_luong_detai) %}
@@ -147,10 +165,10 @@
                   </td>
                 </tr>
                 <tr class="row">
-                  <td class="col col-3">
+                  <td class="col col-4">
                     <label>Nhóm câu hỏi</label>
                   </td>
-                  <td class="col col-9" id="cotchuataonhom">
+                  <td class="col col-8" id="cotchuataonhom">
                     <select class="form-select" aria-label="Default select example" id="chon_nhomcauhoi" onchange="chon_nhom_cauhoi()">
                       <option selected>Chọn nhóm câu hỏi...</option>
                     </select>
@@ -159,43 +177,46 @@
                   </td>
                 </tr>
                 <tr class="row">
-                  <td class="col col-3 mt-2">
+                  <td class="col col-4 mt-2">
                     <label>Mã câu hỏi</label><br>
                     <input type="text" class="form-control" id="ma_cauhoi">
                   </td>
-                  <td class="col col-9 mt-2">
+                  <td class="col col-8 mt-2">
                     <label>Câu hỏi</label>
-                    <textarea type="text" class="form-control" id="cau_hoi" name="ten_de_tai" style="height: 100px"></textarea>
+                    <textarea type="text" class="form-control" id="noidung_cauhoi" name="ten_de_tai" style="height: 100px"></textarea>
                   </td>
                 </tr>
                 <tr class="row">
-                  <td class="col col-3 mt-2">
+                  <td class="col col-4 mt-2">
                     <label>Loại câu trả lời</label><br>
-                    <select class="form-select" aria-label="Default select example" id="chon_loaicautraloi">
+                    <select class="form-select" aria-label="Default select example" id="chon_loaicautraloi" onchange="chon_loai_cau_traloi()">
                       <option selected>Chọn</option>
                       <option>Trắc nghiệm</option>
                       <option>Thang đo Likert</option>
                     </select>
                   </td>
                   <td class="col col-8 mt-2">
-                    <label>Số lượng lựa chọn</label>
-                    <div class="input-group mb-3">
-                      <input type="number" class="form-control" id="soluongluachon" name="soluongluachon" style="width: 100px">
-                      <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="loai_traloi()">Nhập</button>
+                    <div id="nhapsoluongluachon">
+                      <label>Số lượng lựa chọn</label>
+                      <div class="input-group mb-3">
+                        <input type="number" class="form-control" id="soluongluachon" name="soluongluachon" style="width: 100px">
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="loai_traloi()">Nhập</button>
+                      </div>
                     </div>
                   </td>
                 </tr>
               </table>
-              {% include 'traloi.html' %}
+              <div id="gridTraLoi" style="height: 200px; width: 100%" class="ag-theme-alpine mt-2"></div>
+              <div id="gridLikert" style="height: 200px; width: 100%" class="ag-theme-alpine mt-2"></div>
           </form>
 
           <!-- Button group -->
           <div id="button_group" class="mt-5 d-flex mb-5">
             <div class="container ms-auto">
-              <button type="button" class="btn btn-success" onclick="luu_de_tai()">Lưu</button>
-              <button type="button" class="btn btn-secondary" onclick="sua_de_tai()">Sửa</button>
-              <button type="button" class="btn btn-danger" onclick="xoa_de_tai()">Xóa</button>
-              <button type="button" class="btn btn-primary" onclick="huy()">Hủy</button>
+              <button type="button" class="btn btn-success" onclick="luu_cauhoi()">Lưu</button>
+              <button type="button" class="btn btn-secondary" onclick="sua_cauhoi()">Sửa</button>
+              <button type="button" class="btn btn-danger" onclick="xoa_cauhoi()">Xóa</button>
+              <button type="button" class="btn btn-primary" onclick="huy_cauhoi()">Hủy</button>
             </div>
           </div>
         </div>
@@ -203,10 +224,12 @@
         <!-- Hiện thị data grid -->
         <div id="div_phai" class="col-lg-7">
           <h2>Danh sách câu hỏi</h2>
+          <p class="fw-medium fst-italic">Danh sách câu hỏi trong Bảng khảo sát</p>
           <div id="myGrid" style="height: 300px" class="ag-theme-alpine mb-3"></div>
-          <button type="button" class="btn btn-light">Ẩn</button>
-          <button type="button" class="btn btn-dark">Hiện</button>
-          <div id="myGrid2" style="height: 300px" class="ag-theme-alpine mt-3"></div>
+          <button type="button" class="btn btn-light" style="display: none">Ẩn</button>
+          <button type="button" class="btn btn-dark" style="display: none">Hiện</button>
+          <p class="mt-2 fw-medium fst-italic" style="display: none">Danh sách câu hỏi bị Ẩn</p>
+          <div id="myGrid2" style="height: 300px display: none" class="ag-theme-alpine mt-3"></div>
         </div>
       </div>
     </div>

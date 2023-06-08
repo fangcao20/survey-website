@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đánh giá thí điểm</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script src="static/danhgiathidiem.js"></script>
+    <style>
+      .nav-link {
+        font-weight: 600;
+      }
+
+      .navbar-nav .nav-link.active {
+        color: #0F62FE;
+      }
+
+      h1, h2, h5, h6 {
+        color: #0F62FE;
+        margin-top: 5px;
+      }
+
+      #button_group > .container > button {
+        width: 18%; /* chiếm 18% chiều rộng của container */
+        margin-bottom: 10px;
+        margin-right: 10px;
+      }
+
+      @media screen and (max-width: 768px) {
+        #button_group > .container > button {
+          width: 100%; /* chiếm toàn bộ chiều rộng của container */
+        }
+      }
+
+      input[type="radio"]:hover {
+        border: 2px solid #0F62FE;
+      }
+
+      #input_detai, #input_dulieu {
+        display: none;
+      }
+
+      #input_dulieu > label {
+        color: white;
+        background-color: #0F62FE;
+        border-radius: 5px;
+        display: inline-block;
+        cursor: pointer;
+        padding: 3px 10px;
+      }
+
+      .stt-css {
+        font-weight: bold;
+      }
+
+       .highlight {
+          background-color: #ffe5ea;
+          color: #d64b4b;
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <!-- Nav bar -->
+    <div id="navbar">
+      <nav class="navbar navbar-expand-sm bg-body-tertiary shadow-sm p-3 mb-3 bg-body-tertiary rounded">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#"></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="navbar-collapse collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav mx-auto">
+               <li class="nav-item">
+                <a class="nav-link" href="/detai">Đề tài</a>
+               </li>
+               <li class="nav-item">
+                <a class="nav-link" href="/taocauhoi">Tạo câu hỏi</a>
+               </li>
+               <li class="nav-item">
+                <a class="nav-link" href="/khaosat">Khảo sát</a>
+               </li>
+               <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle active" aria-current="page" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Phân tích</a>
+                 <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/chondulieu">Chọn dữ liệu</a></li>
+                  <li><a class="dropdown-item" href="/danhgiathidiem">Đánh giá thí điểm</a></li>
+                  <li><a class="dropdown-item" href="/sangloccauhoi">Sàng lọc câu hỏi</a></li>
+                  <li><a class="dropdown-item" href="/danhgiachinhthuc">Đánh giá chính thức</a></li>
+                </ul>
+               </li>
+            </div>
+            <button type="button" class="btn btn-primary">Đăng xuất</button>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+
+    <!-- Content -->
+    <div id="content" class="container">
+      <ul class="nav nav-tabs mb-2">
+          <li class="nav-item">
+            <a id="cronbachalpha" class="nav-link active" aria-current="page" onclick="cronbach()">Cronbach's Alpha</a>
+          </li>
+          <li class="nav-item">
+            <a id="efa" class="nav-link" onclick="nhantokhampha()">Phân tích nhân tố khám phá EFA</a>
+          </li>
+      </ul>
+
+      <div id="hienthicronbach">
+          <div>
+            <select class="form-select" aria-label="Default select example" id="chonnhomcauhoi" onchange="chon_nhom()" style="width: 100%">
+            </select>
+          </div>
+          <h6>Đánh giá độ tin cậy</h6>
+          <table class="table" style="width: 500px">
+              <thead>
+                <tr>
+                    <th>Cronbach's Alpha</th>
+                    <th>Số lượng biến</th>
+                    <th>Cỡ mẫu</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td id="crbalpha"></td>
+                    <td id="soluongbien"></td>
+                    <td id="comau"></td>
+                </tr>
+              </tbody>
+          </table>
+          <h6>Tương quan biến tổng</h6>
+          <div id="cronbachGrid" style="width: 100%; margin-bottom: 100px" class="ag-theme-alpine mt-3"></div>
+      </div>
+      <div id="hienthiefa" style="display: none">
+          <h6>Hệ số KMO và Kiểm định Bartlett</h6>
+          <table class="table" style="width: 500px">
+              <tbody>
+                <tr>
+                    <td>Hệ số Kaiser-Meyer-Olkin</td>
+                    <td id="kmo"></td>
+                </tr>
+              <tr>
+                  <td>Kiểm định Bartlett</td>
+                  <td id="bartlett">{{ p_value }}</td>
+              </tr>
+              </tbody>
+          </table>
+          <h6>Tổng phương sai trích</h6>
+          <div style="height: 300px; overflow: auto; border: 1px solid #eeeeee; border-radius: 2px;">
+              <table class="table">
+                  <thead>
+                    <tr>
+                        <th style="position: sticky; top: 0; background: white">Nhân tố</th>
+                        <th style="position: sticky; top: 0; background: white">Eigenvalue</th>
+                        <th style="position: sticky; top: 0; background: white">Tổng bình phương hệ số tải của biến</th>
+                        <th style="position: sticky; top: 0; background: white">Tỉ lệ phương sai</th>
+                        <th style="position: sticky; top: 0; background: white">Tổng phương sai tích lũy</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bodyphuongsai">
+                  </tbody>
+              </table>
+          </div>
+          <h6>Ma trận xoay</h6>
+          <p>Phương pháp PCA với phép xoay varimax</p>
+          <div style="height: 500px; overflow: auto; margin-bottom: 100px; border: 1px solid #eeeeee; border-radius: 2px;">
+              <table class="table">
+                  <thead>
+                    <tr id="headmatranxoay"></tr>
+                  </thead>
+                  <tbody id="bodymatranxoay">
+                  </tbody>
+              </table>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>
