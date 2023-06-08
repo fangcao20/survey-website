@@ -213,7 +213,8 @@ $(document).ready(function() {
 $(document).ready(function() {
     $("#hoantac2").click(function(){
         let macauhoisfile1 = macauhoisfile2.slice();
-        let cautraloisfile1 = {...cautraloisfile2};
+        let cautraloisfile1 = JSON.parse(JSON.stringify(cautraloisfile2));
+        console.log(cautraloisfile1);
 
         console.log('tenbiens', tenbiens);
         tenbiens.pop();
@@ -225,7 +226,8 @@ $(document).ready(function() {
 $(document).ready(function() {
     $("#xoabien2").click(function(){
         let macauhoisfile1 = macauhoisfile2.slice();
-        let cautraloisfile1 = {...cautraloisfile2};
+        let cautraloisfile1 = JSON.parse(JSON.stringify(cautraloisfile2));
+        console.log(cautraloisfile1);
 
         tenbiens.push(bienvuaxoa);
         thuchienxoabien(tenbiens, macauhoisfile1, cautraloisfile1);
