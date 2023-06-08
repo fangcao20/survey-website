@@ -22,8 +22,10 @@ function hienthitenfile() {
     document.getElementById('submitfile').style.display = 'inline-block';
 }
 
-var macauhoisfile;
-var cautraloisfile;
+var macauhoisfile1;
+var cautraloisfile1;
+var macauhoisfile2;
+var cautraloisfile2;
 function xulyfile(){
     console.log("Xử lý file");
     const file = document.getElementById("fileinput").files[0];
@@ -39,13 +41,16 @@ function xulyfile(){
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
         localStorage.setItem('data', JSON.stringify(jsonData));
-        macauhoisfile = jsonData[0];
-        cautraloisfile = {};
+        macauhoisfile1 = jsonData[0].slice();
+        cautraloisfile1 = {};
+        macauhoisfile2 = jsonData[0].slice();
+        cautraloisfile2 = {};
         const numRow = jsonData.length;
         for (let row = 1; row < numRow; row++) {
-            cautraloisfile[row] = jsonData[row];
+            cautraloisfile1[row] = jsonData[row];
+            cautraloisfile2[row] = jsonData[row];
         };
-        tabledulieudetai(macauhoisfile, cautraloisfile);
+        tabledulieudetai(macauhoisfile1, cautraloisfile1);
     };
     reader.readAsArrayBuffer(file);
 
@@ -207,15 +212,24 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     $("#hoantac2").click(function(){
+        let macauhoisfile1 = macauhoisfile2.slice();
+        let cautraloisfile1 = {...cautraloisfile2};
+
+        console.log('tenbiens', tenbiens);
         tenbiens.pop();
-        thuchienxoabien(tenbiens, macauhoisfile, cautraloisfile);
+        thuchienxoabien(tenbiens, macauhoisfile1, cautraloisfile1);
+        tabledulieudetai(macauhoisfile1, cautraloisfile1);
     });
 });
 
 $(document).ready(function() {
     $("#xoabien2").click(function(){
-        console.log("xoaik");
-        thuchienxoabien(tenbiens, macauhoisfile, cautraloisfile);
+        let macauhoisfile1 = macauhoisfile2.slice();
+        let cautraloisfile1 = {...cautraloisfile2};
+
+        tenbiens.push(bienvuaxoa);
+        thuchienxoabien(tenbiens, macauhoisfile1, cautraloisfile1);
+        tabledulieudetai(macauhoisfile1, cautraloisfile1);
     });
 });
 
