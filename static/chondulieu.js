@@ -22,9 +22,10 @@ function hienthitenfile() {
     document.getElementById('submitfile').style.display = 'inline-block';
 }
 
+var macauhoisfile;
+var cautraloisfile;
 function xulyfile(){
     console.log("Xử lý file");
-    document.getElementById('gridData').innerHTML = '';
     const file = document.getElementById("fileinput").files[0];
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -38,64 +39,17 @@ function xulyfile(){
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
         localStorage.setItem('data', JSON.stringify(jsonData));
-
-        const numCol = jsonData[0].length;
-        const nameCol =  jsonData[0];
-        const columns = [{ field: 'STT', cellClass: 'stt-css' }];
-        for (let i = 0; i < numCol; i++){
-            columns.push(
-                { field: nameCol[i].trim() }
-            );
-        };
-
-        const rowDatas = [];
+        macauhoisfile = jsonData[0];
+        cautraloisfile = {};
         const numRow = jsonData.length;
-        for (let row = 1; row < numRow; row++){
-            const dictRow = {};
-            dictRow['STT'] = row;
-            for (let col = 0; col < numCol; col++){
-                dictRow[nameCol[col].trim()] = jsonData[row][col];
-            };
-            rowDatas.push(dictRow);
+        for (let row = 1; row < numRow; row++) {
+            cautraloisfile[row] = jsonData[row];
         };
-
-        const gridOptionsData = {
-            columnDefs: columns,
-            rowData: rowDatas,
-            defaultColDef: { resizable: true,},
-            suppressMovableColumns: true,
-            rowSelection: 'multiple', // allow rows to be selected
-            animateRows: true, // have rows animate to new positions when sorted
-            suppressColumnVirtualisation: true,
-
-            // example event handler
-            onCellClicked: params => {
-                console.log('cell was clicked', params)
-                return params
-             },
-//            rowSelection: 'single',
-//            onSelectionChanged: onSelectionChanged,
-        };
-
-        function autoSizeAll(skipHeader) {
-          const allColumnIds = [];
-          gridOptionsData.columnApi.getColumns().forEach((column) => {
-            allColumnIds.push(column.getId());
-          });
-
-          gridOptionsData.columnApi.autoSizeColumns(allColumnIds, skipHeader);
-        };
-
-        const gridData = document.getElementById('gridData');
-        new agGrid.Grid(gridData, gridOptionsData);
-        autoSizeAll(false);
-         document.getElementById('gridData').style.display = 'block';
+        tabledulieudetai(macauhoisfile, cautraloisfile);
     };
     reader.readAsArrayBuffer(file);
 
 };
-
-
 
 $(document).ready(function () {
 //change selectboxes to selectize mode to be searchable
@@ -107,18 +61,18 @@ function tudetai() {
     document.getElementById('input_detai').style.display = "block";
     document.getElementById('input_dulieu').style.display = "none";
     document.getElementById('chonthoigian').style.display = "block";
-    document.getElementById('gridData').style.display = 'none';
     dulieutudetai = 'false';
     localStorage.setItem('dulieutudetai', dulieutudetai);
+    document.querySelector('table').value = '';
 };
 
 function tuteptin() {
     document.getElementById('input_detai').style.display = "none";
     document.getElementById('input_dulieu').style.display = "block";
     document.getElementById('chonthoigian').style.display = "none";
-    document.getElementById('button_phantich').style.display = "block";
     dulieutudetai = 'true';
     localStorage.setItem('dulieutudetai', dulieutudetai);
+    document.querySelector('table').value = '';
 };
 
 
@@ -179,14 +133,12 @@ function sendData(data, action) {
                 thuchienxoabien(tenbiens, macauhois, cautralois);
 
             } else if (action === 'hoantac') {
-                alert(`Hoàn tác cột ${tenbiens[tenbiens.length-1]}`);
                 tenbiens.pop();
                 thuchienxoabien(tenbiens, macauhois, cautralois);
             };
             sendDatasauxoabienvahoantac(macauhois, cautralois);
             tabledulieudetai(macauhois, cautralois);
             document.getElementById('button_phantich').style.display = 'block';
-            document.getElementById('gridData').style.display = 'none';
             localStorage.setItem('macauhois', JSON.stringify(macauhois));
             localStorage.setItem('cautralois', JSON.stringify(cautralois));
         },
@@ -198,10 +150,10 @@ function sendData(data, action) {
 
 function tabledulieudetai(macauhois, cautralois) {
     let bienNum = macauhois.length;
-    let head = '<th style="position: sticky; top: 0; background: white">STT</th>';
+    let head = '<th style="position: sticky; top: 0; background: #eeeeee">STT</th>';
     for (macauhoi of macauhois) {
         head += `
-            <th style="position: sticky; top: 0; background: white">${macauhoi}</th>
+            <th style="position: sticky; top: 0; background: #eeeeee">${macauhoi}</th>
         `;
     };
     document.getElementById('headerdulieudetai').innerHTML = head;
@@ -239,15 +191,34 @@ function choncot() {
     });
 };
 
-function xoabien() {
-    tenbiens.push(bienvuaxoa);
-    console.log(tenbiens);
-    sendData(dulieudetai,'xoa');
-};
+$(document).ready(function() {
+    $("#xoabien1").click(function(){
+        tenbiens.push(bienvuaxoa);
+        console.log(tenbiens);
+        sendData(dulieudetai,'xoa');
+    });
+});
 
-function hoantac() {
-    sendData(dulieudetai, 'hoantac');
-};
+$(document).ready(function() {
+    $("#hoantac1").click(function(){
+        sendData(dulieudetai, 'hoantac');
+    });
+});
+
+$(document).ready(function() {
+    $("#hoantac2").click(function(){
+        tenbiens.pop();
+        thuchienxoabien(tenbiens, macauhoisfile, cautraloisfile);
+    });
+});
+
+$(document).ready(function() {
+    $("#xoabien2").click(function(){
+        console.log("xoaik");
+        thuchienxoabien(tenbiens, macauhoisfile, cautraloisfile);
+    });
+});
+
 
 function sendDatasauxoabienvahoantac(macauhois, cautralois) {
     $.ajax({

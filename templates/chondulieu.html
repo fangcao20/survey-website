@@ -115,6 +115,7 @@
         background: #9fc5e8 !important;
         border: 1px solid #9fc5e8;
     }
+
     </style>
   </head>
   <body>
@@ -188,26 +189,27 @@
                   <label for="ketthuc" style="margin-left: 100px">Thời gian kết thúc</label>
                   <input type="date" id="ketthuc" onchange="thoigianketthuc()">
                   <button type="button" class="btn btn-primary" style="margin-left: 100px" onclick="hienthidulieudetai()">Tải bảng dữ liệu</button>
-                  <button type="button" class="btn btn-danger" style="margin-left: 5px;" id="buttonxoabien" onclick="xoabien()">Xóa</button>
-                  <button type="button" class="btn btn-success" style="margin-left: 5px;" id="buttonhoantac" onclick="hoantac()">Hoàn tác</button>
-                  <div style="height: 500px; overflow: auto; border: 1px solid #eeeeee; border-radius: 2px;">
-                      <table class="table">
-                          <thead>
-                            <tr id="headerdulieudetai"></tr>
-                          </thead>
-                          <tbody id="bodydulieudetai"></tbody>
-                      </table>
-                  </div>
+                  <button type="button" class="btn btn-danger" style="margin-left: 5px;" id="xoabien1">Xóa</button>
+                  <button type="button" class="btn btn-success" style="margin-left: 5px;" id="hoantac1">Hoàn tác</button>
               </div>
 
               <div id="input_dulieu">
                   <label for="fileinput" style="display: inline-block;">Chọn tệp tin</label>
                   <div id="hienthitenfile" style="display: inline-block;"></div>
                   <input type="file" onchange="hienthitenfile()" id="fileinput" style="display: none" name="file">
-                  <button type="submit" class="btn btn-primary" style="display: none; margin-left: 500px" id="submitfile">Hiển thị dữ liệu</button>
+                  <button type="submit" class="btn btn-primary" style="margin-left: 500px" id="submitfile" onclick="xulyfile()">Tải bảng dữ liệu</button>
+                  <button type="button" class="btn btn-danger" style="margin-left: 5px;" id="xoabien2">Xóa</button>
+                  <button type="button" class="btn btn-success" style="margin-left: 5px;" id="hoantac2">Hoàn tác</button>
                 </div>
+              <div style="height: 500px; overflow: auto;">
+                  <table class="table">
+                      <thead>
+                        <tr id="headerdulieudetai"></tr>
+                      </thead>
+                      <tbody id="bodydulieudetai"></tbody>
+                  </table>
+              </div>
           </form>
-          <div id="gridData" style="height: 500px; width: 100%" class="ag-theme-alpine mt-3"></div>
           <div id="button_group" class="mt-5 d-flex mb-5">
             <div id="button_phantich" class="container ms-auto" style="display: none">
               <button type="button" class="btn btn-success" id="danhgiathidiem">Đánh giá thí điểm</button>
