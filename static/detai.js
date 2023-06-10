@@ -1,4 +1,5 @@
 const data = [];
+console.log(detais);
 
 for (const detai of detais) {
   data.push({
@@ -9,63 +10,34 @@ for (const detai of detais) {
     'Mô tả': detai.mo_ta ? detai.mo_ta.replace("'", "\\'") : '',
   });
 }
+hienThiDeTai(data);
 
-const columns = [
-  { field: 'ID', hide: true},
-  { field: 'Tên đề tài' },
-  { field: 'Người thực hiện' },
-  { field: 'Ngày thực hiện' },
-  { field: 'Mô tả' }
-];
+function hienThiDeTai(data) {
+    let html = '';
+    let i = 0;
+    const arr = ["ABCD", "WXYZ", "PQRS", "MNOP", "EFGH", "QRST", "UVWX", "JKLM", "IJKL", "BCDE"];
+    for (detai of data) {
+        var dateString = detai['Ngày thực hiện'];
+        var dateObject = new Date(dateString);
+        var month = dateObject.getUTCMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
+        var day = dateObject.getUTCDate();
+        var year = dateObject.getUTCFullYear();
+        var formattedDate = month.toString().padStart(2, '0') + '-' + day.toString().padStart(2, '0') + '-' + year.toString();
 
-const gridOptions = {
-    defaultColDef: {
-        resizable: true,
-    },
-    columnDefs: columns,
-    rowData: data,
-    defaultColDef: {sortable: true, filter: true},
-    rowSelection: 'multiple', // allow rows to be selected
-    animateRows: true, // have rows animate to new positions when sorted
-
-    // example event handler
-    onCellClicked: params => {
-        console.log('cell was clicked', params)
-     },
-     rowSelection: 'single',
-    onSelectionChanged: onSelectionChanged,
+        html += `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${arr[i]}</td>
+                <td>${detai['Tên đề tài']}</td>
+                <td>${detai['Người thực hiện']}</td>
+                <td>${formattedDate}</td>
+                <td>${detai['Mô tả']}</td>
+            </tr>
+        `;
+        i++;
     };
-
-function onSelectionChanged() {
-    const selectedRows = gridOptions.api.getSelectedRows();
-    if (selectedRows.length > 0) {
-        console.log(selectedRows);
-        let detai = {
-          'detai_id': selectedRows[0]['ID'],
-          'ten_de_tai': selectedRows[0]['Tên đề tài'],
-          'nguoi_thuc_hien': selectedRows[0]['Người thực hiện'],
-          'ngay_thuc_hien': selectedRows[0]['Ngày thực hiện'],
-          'mo_ta': selectedRows[0]['Mô tả']
-        };
-        return detai;
-    };
-    return null;
+    document.getElementById('bodyTableDeTai').innerHTML = html;
 };
-
-function autoSizeAll(skipHeader) {
-  const allColumnIds = [];
-  gridOptions.columnApi.getColumns().forEach((column) => {
-    allColumnIds.push(column.getId());
-  });
-
-  gridOptions.columnApi.autoSizeColumns(allColumnIds, skipHeader);
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    const gridDiv = document.querySelector('#myGrid');
-    new agGrid.Grid(gridDiv, gridOptions);
-    autoSizeAll(false);
-});
 
 
 function luu_de_tai() {

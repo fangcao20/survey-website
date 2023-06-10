@@ -15,14 +15,6 @@
     <script src="static/taocauhoi.js"></script>
     <script src="static/traloi.js"></script>
     <style>
-      #div_trai {
-        position: relative;
-      }
-
-      #div_phai {
-        height: 900px;
-      }
-
       .nav-link {
         font-weight: 600;
       }
@@ -31,7 +23,7 @@
         color: #0F62FE;
       }
 
-      h1, h2 {
+      h1, h2, h5 {
         color: #0F62FE;
         font-weight: 600;
         margin-bottom: 15px;
@@ -69,26 +61,6 @@
         vertical-align: top;
       }
 
-      #taonhom:link {
-        text-decoration: underline;
-        color: black;
-      }
-
-      #taonhom:visited {
-        text-decoration: none;
-        color: black;
-      }
-
-      #taonhom:hover {
-        text-decoration: underline;
-        color: #0F62FE;
-      }
-
-      #taonhom:active {
-        text-decoration: none;
-        color: black;
-      }
-
       #cotchuataonhom {
         position: relative;
       }
@@ -108,7 +80,7 @@
   <body>
     <!-- Nav bar -->
     <div id="navbar">
-      <nav class="navbar navbar-expand-sm bg-body-tertiary shadow-sm p-3 mb-5 bg-body-tertiary rounded">
+      <nav class="navbar navbar-expand-sm bg-body-tertiary shadow-sm p-3 mb-2 bg-body-tertiary rounded">
         <div class="container-fluid">
           <a class="navbar-brand" href="#"></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -144,87 +116,83 @@
 
     <!-- Content -->
     <div id="content" class="container">
-      <div class="row">
-
-        <!-- Input câu hỏicc -->
-        <div id="div_trai" class="col-lg-5">
-          <h1>Tạo câu hỏi</h1>
-          <form method="POST" action="/insert_detai">
-              <table>
-                <tr class="row">
-                  <td class="col col-4">
-                    <label>Đề tài</label>
-                  </td>
-                  <td class="col col-8">
-                    <select class="form-select mb-2" aria-label="Default select example" id="chon_detai" onchange="chon_de_tai()">
-                      <option selected>Chọn đề tài...</option>
-                      {% for i in range(0, so_luong_detai) %}
-                      <option value="{{ detais[i]['detai_id'] }}">{{ detais[i].ten_de_tai }}</option>
-                      {% endfor %}
-                    </select>
-                  </td>
-                </tr>
-                <tr class="row">
-                  <td class="col col-4">
-                    <label>Nhóm câu hỏi</label>
-                  </td>
-                  <td class="col col-8" id="cotchuataonhom">
-                    <select class="form-select" aria-label="Default select example" id="chon_nhomcauhoi" onchange="chon_nhom_cauhoi()">
+      <div>
+        <h5>Tạo câu hỏi</h5>
+        <form method="POST" action="/insert_detai">
+            <table style="width: 100%">
+              <tr class="row">
+                <td class="col col-2">
+                  <label>Đề tài</label>
+                </td>
+                <td class="col col-10">
+                  <select class="form-select mb-2" aria-label="Default select example" id="chon_detai" onchange="chon_de_tai()">
+                    <option selected>Chọn đề tài...</option>
+                    {% for i in range(0, so_luong_detai) %}
+                    <option value="{{ detais[i]['detai_id'] }}">{{ detais[i].ten_de_tai }}</option>
+                    {% endfor %}
+                  </select>
+                </td>
+              </tr>
+              <tr class="row">
+                <td class="col col-2">
+                  <label>Nhóm câu hỏi</label>
+                </td>
+                <td class="col col-10" id="cotchuataonhom">
+                  <div style="display: flex; align-items: center;">
+                    <select class="form-select" aria-label="Default select example" id="chon_nhomcauhoi" onchange="chon_nhom_cauhoi()" style="margin-right: 40px;">
                       <option selected>Chọn nhóm câu hỏi...</option>
                     </select>
-                    <a href="#" id="taonhom" class="mt-1 fw-medium fst-italic mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Tạo nhóm câu hỏi</a>
-                    {% include 'taonhomcauhoi.html' %}
-                  </td>
-                </tr>
-                <tr class="row">
-                  <td class="col col-4 mt-2">
-                    <label>Mã câu hỏi</label><br>
-                    <input type="text" class="form-control" id="ma_cauhoi">
-                  </td>
-                  <td class="col col-8 mt-2">
-                    <label>Câu hỏi</label>
-                    <textarea type="text" class="form-control" id="noidung_cauhoi" name="ten_de_tai" style="height: 100px"></textarea>
-                  </td>
-                </tr>
-                <tr class="row">
-                  <td class="col col-4 mt-2">
-                    <label>Loại câu trả lời</label><br>
-                    <select class="form-select" aria-label="Default select example" id="chon_loaicautraloi" onchange="chon_loai_cau_traloi()">
-                      <option selected>Chọn</option>
-                      <option>Trắc nghiệm</option>
-                      <option>Thang đo Likert</option>
-                    </select>
-                  </td>
-                  <td class="col col-8 mt-2">
-                    <div id="nhapsoluongluachon">
-                      <label>Số lượng lựa chọn</label>
-                      <div class="input-group mb-3">
-                        <input type="number" class="form-control" id="soluongluachon" name="soluongluachon" style="width: 100px">
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="loai_traloi()">Nhập</button>
-                      </div>
+                    <button type="button" id="taonhom"  class="mt-1 fw-medium fst-italic mb-2 btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">...</button>
+                  </div>
+                  {% include 'taonhomcauhoi.html' %}
+                </td>
+              </tr>
+              <tr class="row">
+                <td class="col col-6 mt-2">
+                  <label>Mã câu hỏi</label><br>
+                  <input type="text" class="form-control" id="ma_cauhoi">
+                </td>
+                <td class="col col-6 mt-2">
+                  <label>Loại câu trả lời</label><br>
+                  <select class="form-select" aria-label="Default select example" id="chon_loaicautraloi" onchange="chon_loai_cau_traloi()">
+                    <option selected>Chọn</option>
+                    <option>Trắc nghiệm</option>
+                    <option>Thang đo Likert</option>
+                  </select>
+                </td>
+              </tr>
+              <tr class="row">
+                <td class="col col-6 mt-2">
+                  <label>Câu hỏi</label>
+                  <textarea class="form-control" id="noidung_cauhoi" name="ten_de_tai" style="height: 200px"></textarea>
+                </td>
+                <td class="col col-16 mt-2">
+                  <div id="nhapsoluongluachon">
+                    <label>Số lượng lựa chọn</label>
+                    <div class="input-group mb-3">
+                      <input type="number" class="form-control" id="soluongluachon" name="soluongluachon" style="width: 100px">
+                      <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="loai_traloi()">Nhập</button>
                     </div>
-                  </td>
-                </tr>
-              </table>
-              <div id="gridTraLoi" style="height: 200px; width: 100%" class="ag-theme-alpine mt-2"></div>
-              <div id="gridLikert" style="height: 200px; width: 100%" class="ag-theme-alpine mt-2"></div>
-          </form>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <div id="gridTraLoi" style="height: 200px; width: 100%" class="ag-theme-alpine mt-2"></div>
+            <div id="gridLikert" style="height: 200px; width: 100%" class="ag-theme-alpine mt-2"></div>
+        </form>
 
           <!-- Button group -->
-          <div id="button_group" class="mt-5 d-flex mb-5">
-            <div class="container ms-auto">
-              <button type="button" class="btn btn-success" onclick="luu_cauhoi()">Lưu</button>
-              <button type="button" class="btn btn-secondary" onclick="sua_cauhoi()">Sửa</button>
-              <button type="button" class="btn btn-danger" onclick="xoa_cauhoi()">Xóa</button>
-              <button type="button" class="btn btn-primary" onclick="huy_cauhoi()">Hủy</button>
-            </div>
+        <div id="button_group" class="mt-2 d-flex mb-2">
+          <div class="container ms-auto">
+            <button type="button" class="btn btn-success" onclick="luu_cauhoi()">Lưu</button>
+            <button type="button" class="btn btn-secondary" onclick="sua_cauhoi()">Sửa</button>
+            <button type="button" class="btn btn-danger" onclick="xoa_cauhoi()">Xóa</button>
+            <button type="button" class="btn btn-primary" onclick="huy_cauhoi()">Hủy</button>
           </div>
         </div>
-
-        <!-- Hiện thị data grid -->
+              <!-- Hiện thị data grid -->
         <div id="div_phai" class="col-lg-7">
-          <h2>Danh sách câu hỏi</h2>
-          <p class="fw-medium fst-italic">Danh sách câu hỏi trong Bảng khảo sát</p>
+          <h5>Danh sách câu hỏi</h5>
           <div id="myGrid" style="height: 300px" class="ag-theme-alpine mb-3"></div>
           <button type="button" class="btn btn-light" style="display: none">Ẩn</button>
           <button type="button" class="btn btn-dark" style="display: none">Hiện</button>
@@ -233,6 +201,8 @@
         </div>
       </div>
     </div>
+
+
     <script>
       var detais = {{ detais|tojson }};
     </script>

@@ -8,19 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
-    <link rel="stylesheet"
-     href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css"/>
-    <link rel="stylesheet"
-     href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css"/>
     <style>
-      #div_trai {
-        /* height: 700px; */
-      }
-
-      #div_phai {
-        height: 900px;
-      }
-
       .nav-link {
         font-weight: 600;
       }
@@ -29,7 +17,7 @@
         color: #0F62FE;
       }
 
-      h1, h2 {
+      h1, h2, h5 {
         color: #0F62FE;
         font-weight: 600;
         margin-bottom: 15px;
@@ -38,12 +26,13 @@
       #button_group > .container {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: flex-end;
       }
 
       #button_group > .container > button {
-        width: 24%; /* chiếm 45% chiều rộng của container */
+        width: 15%; /* chiếm 45% chiều rộng của container */
         margin-bottom: 10px;
+        margin-left: 20px;
       }
 
       @media screen and (max-width: 768px) {
@@ -61,7 +50,7 @@
   <body>
     <!-- Nav bar -->
     <div id="navbar">
-      <nav class="navbar navbar-expand-sm bg-body-tertiary shadow-sm p-3 mb-5 bg-body-tertiary rounded">
+      <nav class="navbar navbar-expand-sm bg-body-tertiary shadow-sm p-3 mb-3 bg-body-tertiary rounded">
         <div class="container-fluid">
           <a class="navbar-brand" href="#"></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,6 +77,7 @@
                 </ul>
                </li>
             </div>
+            <h6 style="margin-right: 10px; margin-top: 10px">Minh Anh,</h6>
             <button type="button" class="btn btn-primary">Đăng xuất</button>
           </div>
         </div>
@@ -97,32 +87,17 @@
 
     <!-- Content -->
     <div id="content" class="container">
-      <div class="row">
-
-        <!-- Input đề tài -->
-        <div id="div_trai" class="col-lg-5">
-          <h1>Đề tài</h1>
+      <div>
+        <h5>Đề tài</h5>
           <form method="POST" action="/insert_detai">
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="ten_de_tai" name="ten_de_tai" placeholder="Khảo sát sự hài lòng">
-              <label>Tên đề tài</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="nguoi_thuc_hien" name="nguoi_thuc_hien" placeholder="Nguyễn Văn A">
-              <label>Người thực hiện</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="date" class="form-control" id="ngay_thuc_hien" name="ngay_thuc_hien" placeholder="10/31/2023">
-              <label>Ngày thực hiện</label>
-            </div>
-          <div class="form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" id="mo_ta" name="mo_ta" style="height: 200px"></textarea>
-            <label>Mô tả</label>
-          </div>
+            <input class="form-control mb-2" type="text" placeholder="Tên đề tài">
+            <input class="form-control mb-2" id="nguoi_thuc_hien" type="text" placeholder="Người thực hiện">
+            <input class="form-control mb-2" id="ngay_thuc_hien" type="date" placeholder="Ngày thực hiện">
+            <textarea class="form-control mb-2" placeholder="Mô tả" id="mo_ta" name="mo_ta" style="height: 100px"></textarea>
           </form>
 
           <!-- Button group -->
-          <div id="button_group" class="mt-5 d-flex mb-5">
+          <div id="button_group" class="d-flex mb-2">
             <div class="container ms-auto">
               <button type="button" class="btn btn-success" onclick="luu_de_tai()">Lưu</button>
               <button type="button" class="btn btn-secondary" onclick="sua_de_tai()">Sửa</button>
@@ -130,12 +105,25 @@
               <button type="button" class="btn btn-primary" onclick="huy()">Hủy</button>
             </div>
           </div>
-        </div>
+      </div>
 
-        <!-- Hiện thị data grid -->
-        <div id="div_phai" class="col-lg-7">
-          <h2>Danh sách đề tài</h2>
-          <div id="myGrid" style="height: 500px" class="ag-theme-alpine"></div>
+
+      <!-- Hiện thị data grid -->
+      <div>
+        <h5>Danh sách đề tài</h5>
+        <div id="tableDeTai">
+          <table class="table" style="height: 500px; overflow: auto;">
+            <thead style="background: #eeeeee">
+              <th>STT</th>
+              <th style="width: 100px">Mã đề tài</th>
+              <th>Tên đề tài</th>
+              <th style="width: 200px">Người thực hiện</th>
+              <th style="width: 150px">Ngày thực hiện</th>
+              <th>Mô tả</th>
+            </thead>
+            <tbody id="bodyTableDeTai">
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
