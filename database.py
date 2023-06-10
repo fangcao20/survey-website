@@ -128,6 +128,7 @@ def delete_cauhoi(cauhoi):
     print("Delete")
     mydb.commit()
 
+
 def load_nhomcauhoi(detai_id):
     mycursor.execute("SELECT * FROM nhom_cauhoi WHERE detai_id = %s", (detai_id,))
     result = mycursor.fetchall()
@@ -166,6 +167,7 @@ def insert_nhom_cauhoi(nhomcauhoi):
         print("Update")
     mydb.commit()
 
+
 def delete_nhom_cauhoi(nhomcauhoi):
     values = (nhomcauhoi['nhom_cauhoi_id'],)
     sql = """
@@ -175,6 +177,7 @@ def delete_nhom_cauhoi(nhomcauhoi):
     mycursor.execute(sql, values)
     print("Delete")
     mydb.commit()
+
 
 def load_luachon(cauhoi_id):
     mycursor.execute("SELECT * FROM luachon WHERE cauhoi_id = %s", (cauhoi_id,))
@@ -224,6 +227,7 @@ def insert_cau_traloi(cauhoi_id, loai_cau_tra_loi_id, cautraloi):
     print("Lưu câu trả lời")
     mydb.commit()
 
+
 def load_thangdolikert(cauhoi_id):
     mycursor.execute("SELECT * FROM thangdolikert WHERE cauhoi_id = %s", (cauhoi_id,))
     result = mycursor.fetchall()
@@ -239,6 +243,7 @@ def load_thangdolikert(cauhoi_id):
             record[columns[i]] = row[i]
         records.append(record)
     return records
+
 
 def load_dulieudetai(data):
     detai_id = data['detai_id']
@@ -273,7 +278,22 @@ def load_dulieudetai(data):
         row = []
         for diem in result:
             row.append(diem[0])
-        cautralois[i+1] = row
+        cautralois[i + 1] = row
     return macauhois, cautralois
 
 
+def load_cauhoi_sangloc(macauhois):
+    load_result = []
+    for macauhoi in macauhois:
+        mydict = {}
+        value = (macauhoi,)
+        sql = "SELECT cauhoi_id, noi_dung FROM cauhoi WHERE ma_cauhoi = %s"
+        mycursor.execute(sql, value)
+        result = mycursor.fetchall()
+
+        print(result)
+    #     mydict['cauhoi_id'] = result[0][0]
+    #     mydict['ma_cauhoi'] = macauhoi
+    #     mydict['noi_dung'] = result[0][1]
+    #     load_result.append(mydict)
+    # print(load_result)

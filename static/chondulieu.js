@@ -149,6 +149,7 @@ function sendData(data, action) {
             document.getElementById('button_phantich').style.display = 'block';
             localStorage.setItem('macauhois', JSON.stringify(macauhois));
             localStorage.setItem('cautralois', JSON.stringify(cautralois));
+            localStorage.setItem('macauhoiloaibos', JSON.stringify(tenbiens));
         },
         error: function(error) {
             console.log(error);
@@ -227,6 +228,7 @@ $(document).ready(function() {
         tabledulieudetai(macauhoisfile1, cautraloisfile1);
         localStorage.setItem('macauhois', JSON.stringify(macauhoisfile1));
         localStorage.setItem('cautralois', JSON.stringify(cautraloisfile1));
+        localStorage.setItem('macauhoiloaibos', JSON.stringify(tenbiens));
         sendDatasauxoabienvahoantac(macauhoisfile1, cautraloisfile1);
     });
 });
@@ -242,6 +244,7 @@ $(document).ready(function() {
         tabledulieudetai(macauhoisfile1, cautraloisfile1);
         localStorage.setItem('macauhois', JSON.stringify(macauhoisfile1));
         localStorage.setItem('cautralois', JSON.stringify(cautraloisfile1));
+        localStorage.setItem('macauhoiloaibos', JSON.stringify(tenbiens));
         sendDatasauxoabienvahoantac(macauhoisfile1, cautraloisfile1);
     });
 });

@@ -252,3 +252,19 @@ function hienthimatranxoay(matran, factorNum){
     };
     document.getElementById('bodymatranxoay').innerHTML = body;
 };
+$(document).ready(function() {
+  $('#sangloccauhoi').click(function() {
+    $.ajax({
+      url: '/sangloccauhoi',
+      type: 'GET',
+      success: function(response) {
+        // Xử lý kết quả trả về nếu cần thiết
+        window.open('/sangloccauhoi', '_blank');
+      },
+      error: function(error) {
+        // Xử lý lỗi nếu có
+        console.log(error);
+      }
+    });
+  });
+});

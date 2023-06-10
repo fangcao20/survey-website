@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 from database import load_detai, insert_detai, delete_detai, load_cauhoi, load_nhomcauhoi, insert_nhom_cauhoi, delete_nhom_cauhoi
-from database import insert_cauhoi, delete_cauhoi, load_luachon, load_thangdolikert, load_dulieudetai
+from database import insert_cauhoi, delete_cauhoi, load_luachon, load_thangdolikert, load_dulieudetai, load_cauhoi_sangloc
 from phantich import cronbach, efa
 import csv
 
 
 app = Flask(__name__)
 
-@app.route("/")
+
 @app.route("/detai")
 def detai_page():
     detais = load_detai()
@@ -159,10 +159,33 @@ def detai_data():
     return jsonify(macauhois=macauhois, cautralois=cautralois)
 
 
-
 @app.route("/danhgiathidiem")
 def danhgiathidiem():
     return render_template('danhgiathidiem.html')
+
+@app.route("/sangloccauhoi")
+def sangloccauhoi():
+    return render_template('sangloccauhoi.html')
+
+@app.route("/sangloc_data", methods=["POST"])
+def sangloc_data():
+    data = request.get_json()
+    macauhoichinhthucs = data['macauhoichinhthucs']
+    print(macauhoichinhthucs)
+    macauhoiloaibos = data['macauhoiloaibos']
+    dschct = load_cauhoi_sangloc(macauhoichinhthucs)
+    # dschlb = load_cauhoi_sangloc(macauhoiloaibos)
+    return jsonify(dschct=dschct)
+
+
+@app.route("/")
+@app.route('/dangnhap')
+def login():
+    return render_template('login.html')
+
+@app.route('/dangky')
+def signup():
+    return render_template('signup.html')
 
 
 if __name__ == "__main__":
