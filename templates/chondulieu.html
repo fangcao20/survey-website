@@ -48,45 +48,6 @@
         }
       }
 
-      .row {
-        display: flex;
-        align-items: flex-start;
-      }
-
-      .col {
-        display: inline-block;
-        vertical-align: top;
-      }
-
-      #taonhom:link {
-        text-decoration: underline;
-        color: black;
-      }
-
-      #taonhom:visited {
-        text-decoration: none;
-        color: black;
-      }
-
-      #taonhom:hover {
-        text-decoration: underline;
-        color: #0F62FE;
-      }
-
-      #taonhom:active {
-        text-decoration: none;
-        color: black;
-      }
-
-      #cotchuataonhom {
-        position: relative;
-      }
-
-      #taonhom {
-        position: absolute;
-        right: 15px;
-      }
-
       #nhapsoluongluachon, #gridTraLoi, #gridLikert {
         display: none;
       }
@@ -116,6 +77,21 @@
         border: 1px solid #9fc5e8;
     }
 
+    #myInput {
+          background-image: url('/static/loupe.png'); /* Add a search icon to input */
+          background-size: 20px auto;
+          background-position: 10px 12px; /* Position the search icon */
+          background-repeat: no-repeat; /* Do not repeat the icon image */
+          width: 100%; /* Full-width */
+          font-size: 16px; /* Increase font-size */
+          padding: 12px 20px 12px 40px; /* Add some padding */
+          border: 1px solid #ddd; /* Add a grey border */
+          margin-bottom: 12px; /* Add some space below the input */
+        }
+
+     #tableDeTai tr.header, #tableDeTai tr:hover {
+          background-color: #f1f1f1;
+        }
     </style>
   </head>
   <body>
@@ -148,6 +124,7 @@
                 </ul>
                </li>
             </div>
+              <h6 style="margin-right: 10px; margin-top: 10px">Minh Anh,</h6>
             <button type="button" class="btn btn-primary">Đăng xuất</button>
           </div>
         </div>

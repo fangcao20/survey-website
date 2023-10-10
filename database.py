@@ -1,8 +1,14 @@
 import mysql.connector as connector
+import os
 
-mydb = connector.connect(user='root', password='Phiphi05',
-                         host='localhost',
-                         database='webkhaosat')
+USERNAME = os.environ.get('USERNAME')
+PASSWORD = os.environ.get('PASSWORD')
+HOST = os.environ.get('HOST')
+DATABASE = os.environ.get('DATABASE')
+
+mydb = connector.connect(user=USERNAME, password=PASSWORD,
+                         host=HOST,
+                         database=DATABASE)
 mycursor = mydb.cursor()
 
 

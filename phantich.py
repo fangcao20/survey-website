@@ -22,7 +22,6 @@ def cronbach(data, nhomcauhoi):
   df = pd.json_normalize(new_data)
   print(df.shape[0])
   df.dropna(inplace=True)
-  print(df.shape[0])
   cronbach_list = psy.cronbach_alpha_scale_if_deleted(df)
   cronbach_json = json.loads(cronbach_list[1].to_json(orient="split"))
   cronbach_dict = {}

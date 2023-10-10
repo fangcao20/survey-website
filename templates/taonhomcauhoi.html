@@ -21,7 +21,18 @@
           </div>
         </form>
       </div>
-      <div id="gridNhomCauHoi" style="height: 200px; width: 95%; margin: auto" class="ag-theme-alpine mt-2"></div>
+      <div style="height: 300px; overflow: auto">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 50px">STT</th>
+              <th>Mã nhóm</th>
+              <th>Tên nhóm</th>
+            </tr>
+          </thead>
+          <tbody id="bodyTableNhomCauHoi"></tbody>
+        </table>
+      </div>
       <div class="modal-footer" style=" display: flex; justify-content: space-between;">
         <div class="button-group-left" style="flex-grow: 1;">
           <button type="button" class="btn btn-success" onclick="luu_nhom_cauhoi()">Lưu</button>

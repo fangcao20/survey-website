@@ -1,184 +1,7 @@
-const columns1 = [
-  { field: 'ID', hide: true},
-  { field: 'Đề tài ID', hide: true },
-  { field: 'Nhóm câu hỏi ID', hide: true },
-  { field: 'Loại câu trả lời ID', hide: true },
-  { field: 'STT', width: 80, suppressSizeToFit: true },
-  { field: 'Mã câu hỏi', width: 120, suppressSizeToFit: true },
-  { field: 'Nội dung'}
-];
-
-const rows1 = [];
-const gridOptions = {
-    defaultColDef: {
-        resizable: true,
-    },
-    columnDefs: columns1,
-    rowData: rows1,
-    defaultColDef: {sortable: true, filter: true},
-    onFirstDataRendered: onFirstDataRendered,
-    rowSelection: 'multiple', // allow rows to be selected
-    animateRows: true, // have rows animate to new positions when sorted
-
-    // example event handler
-    onCellClicked: params => {
-        console.log('cell was clicked', params.data)
-     },
-    rowSelection: 'single',
-    onSelectionChanged: onSelectionChangedCauHoi,
-    };
-
-
-const columns2 = [
-  { field: 'ID', hide: true},
-  { field: 'Đề tài ID', hide: true },
-  { field: 'Nhóm câu hỏi ID', hide: true },
-  { field: 'Loại câu trả lời ID', hide: true },
-  { field: 'STT', width: 50 },
-  { field: 'Mã câu hỏi', width: 150, suppressSizeToFit: true },
-  { field: 'Nội dung', wrapText: true, autoHeight: true}
-];
-
-
-const rows2 = [];
-const gridOptions2 = {
-    defaultColDef: {
-        resizable: true,
-    },
-    columnDefs: columns2,
-    rowData: rows2,
-    defaultColDef: {sortable: true, filter: true},
-    onFirstDataRendered: onFirstDataRendered,
-    rowSelection: 'multiple', // allow rows to be selected
-    animateRows: true, // have rows animate to new positions when sorted
-
-    // example event handler
-    onCellClicked: params => {
-        console.log('cell was clicked', params)
-        return params
-     },
-    rowSelection: 'single',
-    onSelectionChanged: onSelectionChangedCauHoi,
-};
-
-const columnNhomCauHoi = [
-  { field: 'ID', hide: true},
-  { field: 'Đề tài ID', hide: true },
-  { field: 'STT', width: 100 },
-  { field: 'Mã nhóm', width: 150, suppressSizeToFit: true },
-  { field: 'Tên nhóm', wrapText: true, autoHeight: true}
-];
-
-const rowNhomCauHoi = [];
-const gridOptionsNhomCauHoi = {
-    defaultColDef: {
-        resizable: true,
-    },
-    columnDefs: columnNhomCauHoi,
-    rowData: rowNhomCauHoi,
-    defaultColDef: {sortable: true, filter: true},
-    onFirstDataRendered: onFirstDataRendered,
-    rowSelection: 'multiple', // allow rows to be selected
-    animateRows: true, // have rows animate to new positions when sorted
-
-    // example event handler
-    onCellClicked: params => {
-        console.log('cell was clicked', params)
-        return params
-     },
-    rowSelection: 'single',
-    onSelectionChanged: onSelectionChanged,
-};
-
-
-function onSelectionChanged() {
-    const selectedRows = gridOptionsNhomCauHoi.api.getSelectedRows();
-    if (selectedRows.length > 0) {
-        console.log(selectedRows);
-        let nhomcauhoi = {
-          'detai_id': selectedRows[0]['Đề tài ID'],
-          'nhom_cauhoi_id': selectedRows[0]['ID'],
-          'ma_nhom': selectedRows[0]['Mã nhóm'],
-          'ten_nhom': selectedRows[0]['Tên nhóm'],
-        };
-        return nhomcauhoi;
-    };
-    return null;
-};
-
-function onSelectionChangedCauHoi() {
-    const selectedRows = gridOptions.api.getSelectedRows();
-    if (selectedRows.length > 0) {
-        console.log(selectedRows);
-        let cauhoi = {
-          'detai_id': selectedRows[0]['Đề tài ID'],
-          'cauhoi_id': selectedRows[0]['ID'],
-          'nhom_cauhoi_id': selectedRows[0]['Nhóm câu hỏi ID'],
-          'loai_cau_tra_loi_id': selectedRows[0]['Loại câu trả lời ID'],
-          'ma_cauhoi': selectedRows[0]['Mã câu hỏi'],
-          'noi_dung': selectedRows[0]['Nội dung'],
-        };
-        let traloi_data = [];
-        let i = 1;
-        for (const tracnghiem of tracnghiems){
-            if (tracnghiem['cauhoi_id'] == cauhoi['cauhoi_id']){
-                traloi_data.push({
-                    'STT': i,
-                    'Nội dung': tracnghiem['noi_dung']
-                });
-                i += 1;
-            };
-        };
-
-        let likert_data = [];
-        for (const likert of likerts){
-            if (likert['cauhoi_id'] == cauhoi['cauhoi_id']){
-                likert_data.push({
-                    'STT': i,
-                    'Điểm Likert': likert['diem_likert'],
-                    'Nội dung': likert['noi_dung'],
-                });
-                i++
-            };
-        };
-
-        if (cauhoi['loai_cau_tra_loi_id'] == 1){
-            traloi_gridOptions.api.setRowData(traloi_data);
-            document.getElementById('chon_loaicautraloi').value = 'Trắc nghiệm';
-            document.getElementById('gridTraLoi').style.display = 'block';
-            document.getElementById('gridLikert').style.display = 'none';
-        } else if (cauhoi['loai_cau_tra_loi_id'] == 2){
-            likert_gridOptions.api.setRowData(likert_data);
-            document.getElementById('chon_loaicautraloi').value = 'Thang đo Likert';
-            document.getElementById('gridLikert').style.display = 'block';
-            document.getElementById('gridTraLoi').style.display = 'none';
-        };
-        document.getElementById('nhapsoluongluachon').style.display = 'block';
-        document.getElementById('soluongluachon').value = i - 1;
-        document.getElementById('ma_cauhoi').value = cauhoi['ma_cauhoi'];
-        document.getElementById('noidung_cauhoi').value = cauhoi['noi_dung'];
-        console.log('Here');
-        console.log(traloi_data);
-        console.log(likert_data);
-        console.log(cauhoi);
-        return cauhoi;
-    };
-    return null;
-};
-
-
-function onFirstDataRendered(params) {
-  params.api.sizeColumnsToFit();
-};
-
-function autoSizeAll(skipHeader) {
-  const allColumnIds = [];
-  gridOptions.columnApi.getColumns().forEach((column) => {
-    allColumnIds.push(column.getId());
-  });
-
-  gridOptions.columnApi.autoSizeColumns(allColumnIds, skipHeader);
-}
+$(document).ready(function () {
+//change selectboxes to selectize mode to be searchable
+   $("#chon_detai").select2();
+});
 
 var detai_id;
 function chon_de_tai() {
@@ -215,6 +38,7 @@ function chon_nhom_cauhoi(){
 
 var likerts = [];
 var tracnghiems = [];
+
 function sendData(data, action) {
     $.ajax({
         url: '/taocauhoi_data',
@@ -227,33 +51,8 @@ function sendData(data, action) {
             const rowNhomCauHoi = [];
             console.log(response);
             console.log('Dữ liệu đã được gửi thành công');
-            var stt_cauhoi_hien = 1;
-            var stt_cauhoi_an = 1;
-            for (const cauhoi of response.cauhois){
-                if (cauhoi['trang_thai'] === 'Hiện') {
-                    rows1.push({
-                        'ID': cauhoi['cauhoi_id'],
-                        'Đề tài ID': cauhoi['detai_id'],
-                        'Nhóm câu hỏi ID': cauhoi['nhom_cauhoi_id'],
-                        'Loại câu trả lời ID': cauhoi['loai_cau_tra_loi_id'],
-                        'STT': stt_cauhoi_hien,
-                        'Mã câu hỏi': cauhoi['ma_cauhoi'],
-                        'Nội dung': cauhoi['noi_dung']
-                    });
-                    stt_cauhoi_hien += 1;
-                } else if (cauhoi['trang_thai'] === 'Ẩn') {
-                    rows2.push({
-                        'ID': cauhoi['cauhoi_id'],
-                        'Đề tài ID': cauhoi['detai_id'],
-                        'Nhóm câu hỏi ID': cauhoi['nhom_cauhoi_id'],
-                        'Loại câu trả lời ID': cauhoi['loai_cau_tra_loi_id'],
-                        'STT': stt_cauhoi_an,
-                        'Mã câu hỏi': cauhoi['ma_cauhoi'],
-                        'Nội dung': cauhoi['noi_dung']
-                    });
-                    stt_cauhoi_an += 1;
-                };
-            };
+            hiendanhsachcauhoi(response.cauhois);
+
             var i = 1;
 
             const selectElement = document.getElementById('chon_nhomcauhoi');
@@ -270,6 +69,7 @@ function sendData(data, action) {
                 html += '<option value=' + '"' + nhomcauhoi['nhom_cauhoi_id'] + '"' + '>' + nhomcauhoi['ma_nhom'] + ' - ' + nhomcauhoi['noi_dung'] + '</option>';
             };
             selectElement.innerHTML = html;
+            hienthibangnhomcauhoi(response.nhomcauhois);
 
 
             for (const tracnghiem of response.tracnghiems){
@@ -298,34 +98,12 @@ function sendData(data, action) {
                     };
                 };
             };
-
-            gridOptions.api.setRowData(rows1);
-            gridOptions2.api.setRowData(rows2);
-            gridOptionsNhomCauHoi.api.setRowData(rowNhomCauHoi);
         },
         error: function(error) {
             console.log(error);
         }
     });
 };
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  const gridDiv = document.querySelector('#myGrid');
-  new agGrid.Grid(gridDiv, gridOptions);
-});
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  const gridDiv2 = document.querySelector('#myGrid2');
-  new agGrid.Grid(gridDiv2, gridOptions2);
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  const gridNhomCauHoi = document.querySelector('#gridNhomCauHoi');
-  new agGrid.Grid(gridNhomCauHoi, gridOptionsNhomCauHoi);
-});
 
 
 var suacauhoi_button_clicked = false;
@@ -400,3 +178,35 @@ function huy_cauhoi() {
   document.getElementById('ma_cauhoi').value = '';
   document.getElementById('noidung_cauhoi').value = '';
 }
+
+function hiendanhsachcauhoi(cauhois){
+    const numCauHoi = cauhois.length;
+    let html = '';
+    for (let i = 0; i < numCauHoi; i++) {
+        html += `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${cauhois[i]['ma_cauhoi']}</td>
+                <td>${cauhois[i]['noi_dung']}</td>
+                <td>${cauhois[i]['trang_thai']}</td>
+            </tr>
+        `;
+    }
+    document.getElementById('bodyTableCauHoi').innerHTML = html;
+};
+
+function hienthibangnhomcauhoi(nhomcauhois) {
+    let html = '';
+    let i = 0;
+    for (nhomcauhoi of nhomcauhois) {
+        i++;
+        html += `
+            <tr>
+                <td>${i}</td>
+                <td>${nhomcauhoi['ma_nhom']}</td>
+                <td>${nhomcauhoi['noi_dung']}</td>
+            </tr>
+        `;
+    }
+    document.getElementById('bodyTableNhomCauHoi').innerHTML = html;
+};
